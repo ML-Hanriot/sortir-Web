@@ -24,7 +24,7 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/creer', name: 'creer')]
+    #[Route('/creer', name: 'creer', methods: ['POST'])]
     public function creer(Request $request, EntityManagerInterface $entityManager): Response
     {
         $sortie = new Sortie();
@@ -49,10 +49,10 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/voire', name: 'voire', methods: ['GET'])]
-    public function voire(Sortie $sortie): Response
+    #[Route('/voir', name: 'voir', methods: ['GET'])]
+    public function voir(Sortie $sortie): Response
     {
-        return $this->render('sortie/voire.html.twig', [
+        return $this->render('sortie/voir.html.twig', [
             'sortie' => $sortie,
         ]);
     }
