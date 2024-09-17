@@ -14,6 +14,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[UniqueEntity(fields: 'nom')]
 class Campus
 {
+    //marie laure const
+    public const NANTES = 'Nantes';
+    public const RENNES = 'Rennes';
+    public const NIORD = 'Niort';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
