@@ -10,6 +10,15 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: EtatRepository::class)]
 class Etat
 {
+    public const LIBELLES=[
+        'Créée',
+        'Ouverte',
+        'Clôturée',
+        'Activité en cours',
+        'Passée',
+        'Annulée'
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -42,8 +51,12 @@ class Etat
 
     public function setLibelle(string $libelle): static
     {
-        $this->libelle = $libelle;
-
+        //$this->libelle = $libelle;
+        //return $this;
+        //Stephane : Ajout du tableau de libelles
+        if(!in_array($libelle, self::LIBELLES)){
+            $this->libelle = $libelle;
+        }
         return $this;
     }
 
