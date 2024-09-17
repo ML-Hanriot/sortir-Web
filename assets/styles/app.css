@@ -10,6 +10,7 @@ main{
     flex:1;
 }
 form{
+    margin-top: 30vh;
     text-align: center;
 }
 footer{
@@ -17,4 +18,3 @@ footer{
     text-align: center;
     height: 5%;
 }
-
