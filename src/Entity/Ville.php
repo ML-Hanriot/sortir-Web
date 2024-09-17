@@ -19,17 +19,17 @@ class Ville
     private ?string $nom = null;
 
     #[ORM\Column]
-    private ?int $codePostal = null;
+    private ?string $codePostal = null;
 
     /**
-     * @var Collection<int, lieu>
+     * @var Collection<int, Lieu>
      */
-    #[ORM\OneToMany(targetEntity: lieu::class, mappedBy: 'ville')]
-    private Collection $lieu;
+    #[ORM\OneToMany(targetEntity: Lieu::class, mappedBy: 'ville')]
+    private Collection $lieux;
 
     public function __construct()
     {
-        $this->lieu = new ArrayCollection();
+        $this->lieux = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -49,12 +49,12 @@ class Ville
         return $this;
     }
 
-    public function getCodePostal(): ?int
+    public function getCodePostal(): ?string
     {
         return $this->codePostal;
     }
 
-    public function setCodePostal(int $codePostal): static
+    public function setCodePostal(string $codePostal): static
     {
         $this->codePostal = $codePostal;
 
@@ -62,26 +62,26 @@ class Ville
     }
 
     /**
-     * @return Collection<int, lieu>
+     * @return Collection<int, Lieu>
      */
-    public function getLieu(): Collection
+    public function getLieux(): Collection
     {
-        return $this->lieu;
+        return $this->lieux;
     }
 
-    public function addLieu(lieu $lieu): static
+    public function addLieu(Lieu $lieu): static
     {
-        if (!$this->lieu->contains($lieu)) {
-            $this->lieu->add($lieu);
+        if (!$this->lieux->contains($lieu)) {
+            $this->lieux->add($lieu);
             $lieu->setVille($this);
         }
 
         return $this;
     }
 
-    public function removeLieu(lieu $lieu): static
+    public function removeLieu(Lieu $lieu): static
     {
-        if ($this->lieu->removeElement($lieu)) {
+        if ($this->lieux->removeElement($lieu)) {
             // set the owning side to null (unless already changed)
             if ($lieu->getVille() === $this) {
                 $lieu->setVille(null);

@@ -6,8 +6,10 @@ use App\Repository\CampusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CampusRepository::class)]
+#[UniqueEntity(fields: 'nom')]
 class Campus
 {
     #[ORM\Id]
@@ -15,7 +17,7 @@ class Campus
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50,unique: true)]
     private ?string $nom = null;
 
     /**
@@ -25,15 +27,15 @@ class Campus
     private Collection $participants;
 
     /**
-     * @var Collection<int, sortie>
+     * @var Collection<int, Sortie>
      */
-    #[ORM\OneToMany(targetEntity: sortie::class, mappedBy: 'campus')]
-    private Collection $sortie;
+    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'campus')]
+    private Collection $sorties;
 
     public function __construct()
     {
         $this->participants = new ArrayCollection();
-        $this->sortie = new ArrayCollection();
+        $this->sorties = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -84,26 +86,26 @@ class Campus
     }
 
     /**
-     * @return Collection<int, sortie>
+     * @return Collection<int, Sortie>
      */
-    public function getSortie(): Collection
+    public function getSorties(): Collection
     {
-        return $this->sortie;
+        return $this->sorties;
     }
 
-    public function addSortie(sortie $sortie): static
+    public function addSortie(Sortie $sortie): static
     {
-        if (!$this->sortie->contains($sortie)) {
-            $this->sortie->add($sortie);
+        if (!$this->sorties->contains($sortie)) {
+            $this->sorties->add($sortie);
             $sortie->setCampus($this);
         }
 
         return $this;
     }
 
-    public function removeSortie(sortie $sortie): static
+    public function removeSortie(Sortie $sortie): static
     {
-        if ($this->sortie->removeElement($sortie)) {
+        if ($this->sorties->removeElement($sortie)) {
             // set the owning side to null (unless already changed)
             if ($sortie->getCampus() === $this) {
                 $sortie->setCampus(null);

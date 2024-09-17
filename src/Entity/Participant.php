@@ -6,9 +6,14 @@ use App\Repository\ParticipantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
-class Participant
+#[UniqueEntity(fields: 'mail')]
+#[UniqueEntity(fields: 'pseudo')]
+class Participant implements UserInterface,PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,12 +27,12 @@ class Participant
     private ?string $prenom = null;
 
     #[ORM\Column(length: 10)]
-    private ?int $telephone = null;
+    private ?string $telephone = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180,unique: true)]
     private ?string $mail = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 255)]
     private ?string $motPasse = null;
 
     #[ORM\Column]
@@ -36,29 +41,29 @@ class Participant
     #[ORM\Column]
     private ?bool $actif = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50,unique: true)]
     private ?string $pseudo = null;
 
     #[ORM\ManyToOne(inversedBy: 'participants')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?campus $campus = null;
-
-    /**
-     * @var Collection<int, sortie>
-     */
-    #[ORM\ManyToMany(targetEntity: sortie::class, inversedBy: 'participants')]
-    private Collection $sortie;
+    private ?Campus $campus = null;
 
     /**
      * @var Collection<int, Sortie>
      */
-    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'participant')]
+    #[ORM\ManyToMany(targetEntity: Sortie::class, inversedBy: 'participants')]
     private Collection $sorties;
+
+    /**
+     * @var Collection<int, Sortie>
+     */
+    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur')]
+    private Collection $sortiesOrganisees;
 
     public function __construct()
     {
-        $this->sortie = new ArrayCollection();
         $this->sorties = new ArrayCollection();
+        $this->sortiesOrganisees = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -162,12 +167,12 @@ class Participant
         return $this;
     }
 
-    public function getCampus(): ?campus
+    public function getCampus(): ?Campus
     {
         return $this->campus;
     }
 
-    public function setCampus(?campus $campus): static
+    public function setCampus(?Campus $campus): static
     {
         $this->campus = $campus;
 
@@ -177,23 +182,23 @@ class Participant
     /**
      * @return Collection<int, sortie>
      */
-    public function getSortie(): Collection
+    public function getSorties(): Collection
     {
-        return $this->sortie;
+        return $this->sorties;
     }
 
-    public function addSortie(sortie $sortie): static
+    public function addSortie(Sortie $sortie): static
     {
-        if (!$this->sortie->contains($sortie)) {
-            $this->sortie->add($sortie);
+        if (!$this->sorties->contains($sortie)) {
+            $this->sorties->add($sortie);
         }
 
         return $this;
     }
 
-    public function removeSortie(sortie $sortie): static
+    public function removeSortie(Sortie $sortie): static
     {
-        $this->sortie->removeElement($sortie);
+        $this->sorties->removeElement($sortie);
 
         return $this;
     }
@@ -201,30 +206,50 @@ class Participant
     /**
      * @return Collection<int, Sortie>
      */
-    public function getSorties(): Collection
+    public function getSortiesOrganisees(): Collection
     {
-        return $this->sorties;
+        return $this->sortiesOrganisees;
     }
 
-    public function addSorty(Sortie $sorty): static
+    public function addSortieOrganisee(Sortie $sortie): static
     {
-        if (!$this->sorties->contains($sorty)) {
-            $this->sorties->add($sorty);
-            $sorty->setParticipant($this);
+        if (!$this->sortiesOrganisees->contains($sortie)) {
+            $this->sortiesOrganisees->add($sortie);
+            $sortie->setOrganisateur($this);
         }
 
         return $this;
     }
 
-    public function removeSorty(Sortie $sorty): static
+    public function removeSortieOrganisee(Sortie $sortie): static
     {
-        if ($this->sorties->removeElement($sorty)) {
+        if ($this->sortiesOrganisees->removeElement($sortie)) {
             // set the owning side to null (unless already changed)
-            if ($sorty->getParticipant() === $this) {
-                $sorty->setParticipant(null);
+            if ($sortie->getOrganisateur() === $this) {
+                $sortie->setOrganisateur(null);
             }
         }
 
         return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+       return $this->motPasse;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->administrateur ? ['ROLE_ADMIN'] : ['ROLE_USER'];
+    }
+
+    public function eraseCredentials()
+    {
+        //
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->mail;
     }
 }
