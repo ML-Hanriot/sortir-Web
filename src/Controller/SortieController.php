@@ -41,7 +41,7 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', 'Sortie créée avec succès');
 
-            return $this->redirectToRoute('app_sortie...index');
+            return $this->redirectToRoute('app_sortie...sorties');
         }
 
         return $this->render('sortie/creer.html.twig', [
@@ -68,7 +68,7 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', 'Sortie mise à jour avec succès');
 
-            return $this->redirectToRoute('app_sortie...index');
+            return $this->redirectToRoute('app_sortie...sorties');
         }
 
         return $this->render('sortie/modifier.html.twig', [
@@ -87,6 +87,6 @@ class SortieController extends AbstractController
             $this->addFlash('success', 'Sortie supprimée avec succès');
         }
 
-        return $this->redirectToRoute('app_sortie...index');
+        return $this->redirectToRoute('app_sortie...sorties');
     }
 }
