@@ -1,0 +1,18 @@
+{#marie laure#}
+{%  extends 'base.html.twig' %}
+
+
+{% block body %}
+    <h2>Mon profil</h2>
+    {{ form_start(profilForm) }}
+    {{ form_widget(profilForm) }}
+
+    <button>Enregistrer</button>
+    <button>Annuler</button>
+
+    {{ form_end(profilForm) }}
+{% endblock %}
+
+{% block title %}
+    Profil
+{% endblock %}

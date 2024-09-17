@@ -1,0 +1,22 @@
+{#marie laure#}
+{%  extends 'base.html.twig' %}
+
+
+{% block body %}
+    <h2>{{ Participant.pseudo }}</h2>
+
+    <div>
+        Prénom : {{ Participant.prenom }}
+        Nom : {{ Participant.nom }}
+        Téléphone : {{ Participant.telephone }}
+        Email : {{ Participant. }}
+    </div>
+
+    <button>Retour</button>
+
+
+{% endblock %}
+
+{% block title %}
+    Votre profil
+{% endblock %}
