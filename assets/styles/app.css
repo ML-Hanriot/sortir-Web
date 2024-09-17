@@ -1,3 +1,20 @@
-body {
-    background-color: skyblue;
+html,body {
+    display: flex;
+    flex-direction: column;
+    margin:0;
+    background-color: #5c5c5c;
+    color: white;
+    height:100%;
 }
+main{
+    flex:1;
+}
+form{
+    text-align: center;
+}
+footer{
+    background-color: #1c1c1c;
+    text-align: center;
+    height: 5%;
+}
+
