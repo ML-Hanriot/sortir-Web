@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 #[UniqueEntity(fields: 'mail')]
@@ -21,6 +22,8 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "Veuillez fournir votre nom d'utilisateur")]
+    #[Assert\Length(min: 3, max: 50, minMessage:"Minimum 3 caractères", maxMessage: "Maximum 50 caractères")]
     private ?string $nom = null;
 
     #[ORM\Column(length: 50)]
@@ -30,9 +33,11 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface
     private ?string $telephone = null;
 
     #[ORM\Column(length: 180,unique: true)]
+    #[Assert\Email(message: "Veuillez entrer une adresse email valide")]
     private ?string $mail = null;
 
     #[ORM\Column(length: 255)]
+    //#[Assert\Regexx(pattern:"/^[a-z0-9_-]+$/i", message:"Veuillez utiliser uniquement des lettres, des chiffres, des traits de soulignement et des tirets !")]
     private ?string $motPasse = null;
 
     #[ORM\Column]
