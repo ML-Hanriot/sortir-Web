@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+    <div class="positionright">
+        Date du jour : <br>
+        Participant :
+    </div>
+    <div>
+        Filtrer les sorties
+        <div>
+            Campus :
+        </div>
+        <div>
+            Le nom de la sortie contient :
+        </div>
+        <div>
+            Entre :     et
+        </div>
+        <div class="column">
+            <input type="checkbox" name="organisateur" id="organisateur"><label for="organisateur">Sorties dont je suis l'organisateur/trice</label><br>
+            <input type="checkbox" name="organisateur" id="organisateur"><label for="organisateur">Sorties auxquelles je suis inscrit/e</label><br>
+            <input type="checkbox" name="organisateur" id="organisateur"><label for="organisateur">Sorties auxquelles je ne suis pas inscrit/e</label><br>
+            <input type="checkbox" name="organisateur" id="organisateur"><label for="organisateur">Sorties passées</label>
+        </div>
+        <div>
+           <!-- <a href="{{ path('app_sortie') }}" class="btn btn-primary">Crée une sortie</a>-->
+        </div>
+        <div class="tableau">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Nom de la sortie</th>
+                    <th scope="col">Date de la sortie</th>
+                    <th scope="col">Clôture</th>
+                    <th scope="col">inscrit/places</th>
+                    <th scope="col">Etat</th>
+                    <th scope="col">Inscrit</th>
+                    <th scope="col">Organisateur</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div>
+            <button type="button">Créer une sortie</button>
+        </div>
+
+    </div>
+{% endblock %}
