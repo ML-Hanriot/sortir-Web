@@ -2,8 +2,11 @@
 <h1>Logo Sortir.com</h1>
 
 <nav class="header-nav">
-    <a href="{{ path('main_home') }}" title="Go back to homepage">Home</a>
-    <a href="{{ path('wish_list') }}" title="Wish list">wish</a>
-    <a href="{{ path('main_about-us') }}" title="About us">About us</a>
+    {% if app.user %}
+    <a href="{#  {{ path('main_home') }}#}" title="About us">Accueil</a>
+        <a href="{#  {{ path('main_home') }}#}" title="About us">Accueil</a>
+        <a href="{#  {{ path('app_profil') }}#}" title="MonProfil">Mon profil</a>
+        <a href="{{ path('app_logout') }}" title="Logout">Se déconnexion</a>
+    {% endif %}
 </nav>
 </div>

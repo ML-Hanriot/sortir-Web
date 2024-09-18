@@ -18,3 +18,11 @@ footer {
     text-align: center;
     height: 5%;
 }
+header{
+   background-color: #1c1c1c;
+    margin-bottom: 5vh;
+}
+a{
+    color: white;
+    text-decoration: none;
+}

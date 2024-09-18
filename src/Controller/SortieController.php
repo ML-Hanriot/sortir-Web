@@ -13,17 +13,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class SortieController extends AbstractController
 {
-    #[Route('/sorties', name: 'app_sortie')]
-    public function index(SortieRepository $sortieRepository): Response
+     #[Route('/sorties', name: 'app_sorties')]
+    public function sorties(): Response
     {
-        // Affiche toutes les sorties
-        $sorties = $sortieRepository->findAll();
-
-        return $this->render('sortie/sorties.html.twig', [
-            'sorties' => $sorties,
-        ]);
+        // Logique pour récupérer les sorties
+        return $this->render('sortie/sorties.html.twig');
     }
-
     #[Route('/creer', name: 'creer', methods: ['POST'])]
     public function creer(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -49,12 +44,6 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/sorties', name: 'app_sorties')]
-    public function sorties(): Response
-    {
-        // Logique pour récupérer les sorties
-        return $this->render('sortie/sorties.html.twig');
-    }
 
     #[Route('/modifier', name: 'modifier', methods: ['GET', 'POST'])]
     public function modifier(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
