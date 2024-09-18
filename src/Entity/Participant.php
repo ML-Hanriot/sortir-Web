@@ -69,6 +69,7 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface
     {
         $this->sorties = new ArrayCollection();
         $this->sortiesOrganisees = new ArrayCollection();
+        $this->actif = true; // Initialisez par défaut à true ou false selon votre logique
     }
 
     public function getId(): ?int
@@ -242,6 +243,14 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface
     {
        return $this->motPasse;
     }
+
+    //STEPHANE
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles; // Assigne le tableau de rôles à la propriété `roles`
+
+return $this;
+}
 
     public function getRoles(): array
     {

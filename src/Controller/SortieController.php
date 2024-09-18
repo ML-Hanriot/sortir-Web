@@ -10,10 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-#[Route('/sortie', name: 'app_sortie...')]
+
 class SortieController extends AbstractController
 {
-    #[Route('/sorties', name: 'sorties')]
+    #[Route('/sorties', name: 'app_sortie')]
     public function index(SortieRepository $sortieRepository): Response
     {
         // Affiche toutes les sorties
@@ -49,12 +49,11 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/voir', name: 'voir', methods: ['GET'])]
-    public function voir(Sortie $sortie): Response
+    #[Route('/sorties', name: 'app_sorties')]
+    public function sorties(): Response
     {
-        return $this->render('sortie/voir.html.twig', [
-            'sortie' => $sortie,
-        ]);
+        // Logique pour récupérer les sorties
+        return $this->render('sortie/sorties.html.twig');
     }
 
     #[Route('/modifier', name: 'modifier', methods: ['GET', 'POST'])]
