@@ -80,6 +80,7 @@ class SortieController extends AbstractController
     #[Route('/supprimer', name: 'supprimer', methods: ['POST'])]
     public function supprimer(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
+
         if ($this->isCsrfTokenValid('supprimer'.$sortie->getId(), $request->request->get('_token'))) {
             $entityManager->remove($sortie);
             $entityManager->flush();

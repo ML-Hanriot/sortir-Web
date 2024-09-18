@@ -1,0 +1,23 @@
+{#marie laure#}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2 class="container">Annuler une sortie</h2>
+
+    <div class="container">
+        Nom de la sortie : {{ Sortie.nom }}
+        {# on ne veut que la date #}
+        Date de la sortie : {{ Sortie.dateHeureDebut }}
+        Campus : {{ Sortie.campus }}
+        Lieu : {{ Sortie.lieu }}
+        Motif : <textarea name="motif" id="motif" cols="30" rows="10"></textarea>
+
+        <div class="d-flex">
+            <button>Enregistrer</button>
+            <button>Annuler</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block title %}
+{% endblock %}

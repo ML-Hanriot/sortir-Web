@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2 class="container">Afficher une sortie</h2>
+
+    <div class="d-flex">
+        <div>
+            Nom de la sortie : {{ Sortie.nom }}
+            Date et heure de la sortie : {{ Sortie.dateHeureDebut }}
+            Date limite d'inscription : {{ Sortie.dateLimiteInscription }}
+            Nombre de places : {{ Sortie.nbInscriptionsMax }}
+            Durée : {{ Sortie.duree }} minutes
+            Description et infos : {{ Sortie.infosSortie }}
+        </div>
+        <div>
+            Campus : {{ Sortie.campus }}
+            Lieu : {{ Sortie.lieu }}
+            Rue :
+            Code postal :
+            Latitude :
+            Longitude :
+        </div>
+    </div>
+    <div>
+        <h3>Liste des participants inscrits :</h3>
+
+       <table>
+           <thead>
+             <tr>Pseudo</tr>
+             <tr>Nom</tr>
+           </thead>
+           <tbody>
+                <tr>
+                    {% for inscrit in inscrits %}
+                    <td>{{ Participant.pseudo }}</td>
+                    <td>{{ Participant.prenom . ' ' . Participant.nom }}</td>
+                    {% endfor %}
+                </tr>
+           </tbody>
+       </table>
+
+
+
+    </div>
+{% endblock %}
+
+{% block title %}
+{% endblock %}
