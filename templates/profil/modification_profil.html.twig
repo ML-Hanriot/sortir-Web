@@ -4,13 +4,12 @@
 
 {% block body %}
     <h2>Mon profil</h2>
-    {{ form_start(profilForm) }}
-    {{ form_widget(profilForm) }}
-
+    {{ form_start(registrationForm) }}
+    {{ form_widget(registrationForm)}}
     <button>Enregistrer</button>
     <button>Annuler</button>
 
-    {{ form_end(profilForm) }}
+    {{ form_end(registrationForm) }}
 {% endblock %}
 
 {% block title %}

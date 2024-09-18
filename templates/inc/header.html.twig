@@ -3,10 +3,13 @@
 
 <nav class="header-nav">
     {% if app.user %}
-    <a href="{#  {{ path('main_home') }}#}" title="About us">Accueil</a>
-        <a href="{#  {{ path('main_home') }}#}" title="About us">Accueil</a>
-        <a href="{#  {{ path('app_profil') }}#}" title="MonProfil">Mon profil</a>
-        <a href="{{ path('app_logout') }}" title="Logout">Se déconnexion</a>
+        {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_villes') }}" title="Villes">Villes</a>
+        <a href="{{ path('app_campus') }}" title="Campus">Campus</a>
+        {% endif %}
+    <a href="{{ path('app_sorties') }}" title="About us">Accueil</a>
+        <a href="{{ path('app_profil') }}" title="MonProfil">Mon profil</a>
+        <a href="{{ path('app_logout') }}" title="Logout">Se déconnexion {{ app.user.pseudo }}</a>
     {% endif %}
 </nav>
 </div>

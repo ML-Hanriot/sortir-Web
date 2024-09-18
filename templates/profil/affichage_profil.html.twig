@@ -3,16 +3,19 @@
 
 
 {% block body %}
-    <h2>{{ Participant.pseudo }}</h2>
+
+    <h2>{{ app.user.pseudo }}</h2>
 
     <div>
-        Prénom : {{ Participant.prenom }}
-        Nom : {{ Participant.nom }}
-        Téléphone : {{ Participant.telephone }}
-        Email : {{ Participant.mail }}
+        Prénom : {{ app.user.prenom }}<br>
+        Nom : {{ app.user.nom }}<br>
+        Téléphone : {{ app.user.telephone }}<br>
+        Email : {{ app.user.mail }}<br>
+        Campus : {{ app.user.campus.nom }}
+
     </div>
 
-    <button>Retour</button>
+    <a href="{{ path('app_modifprofil') }}" class="btn">Modification</a>
 
 
 {% endblock %}
