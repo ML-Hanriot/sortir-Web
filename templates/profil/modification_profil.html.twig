@@ -1,17 +1,32 @@
-{#marie laure#}
-{%  extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
+{% block title %}Modifier le profil{% endblock %}
 
 {% block body %}
-    <h2>Mon profil</h2>
+    <h1>Modifier le profil</h1>
+
     {{ form_start(registrationForm) }}
-    {{ form_widget(registrationForm)}}
-    <button>Enregistrer</button>
-    <button>Annuler</button>
+
+    {{ form_row(registrationForm.pseudo) }}
+    {{ form_row(registrationForm.nom) }}
+    {{ form_row(registrationForm.prenom) }}
+    {{ form_row(registrationForm.telephone) }}
+    {{ form_row(registrationForm.mail) }}
+    {{ form_row(registrationForm.plainPassword) }}
+
+    <!-- Ajout des champs `actif` et `administrateur` -->
+    {{ form_row(registrationForm.actif) }}
+    {{ form_row(registrationForm.administrateur) }}
+
+    <button class="btn">Enregistrer</button>
 
     {{ form_end(registrationForm) }}
-{% endblock %}
 
-{% block title %}
-    Profil
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
 {% endblock %}

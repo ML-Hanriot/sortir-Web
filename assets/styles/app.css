@@ -2,7 +2,7 @@ html,body {
     display: flex;
     flex-direction: column;
     margin:0;
-    background-color: #5c5c5c;
+    background-color: #4a4a4c;
     color: white;
     height:100%;
 }
@@ -14,15 +14,17 @@ form{
     text-align: center;
 }
 footer {
-    background-color: #1c1c1c;
     text-align: center;
+    padding-top: 20px;
     height: 5%;
 }
 header{
-   background-color: #1c1c1c;
     margin-bottom: 5vh;
 }
 a{
     color: white;
     text-decoration: none;
+}
+header,footer{
+    background-color: #1c1c1c;
 }
