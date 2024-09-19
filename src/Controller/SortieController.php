@@ -11,16 +11,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/sorties', name: 'app_')]
 class SortieController extends AbstractController
 {
-     #[Route('/sorties', name: 'app_sorties')]
+     #[Route('/', name: 'sorties')]
     public function sorties(SortieRepository $sortieRepository): Response
     {
         $sorties = $sortieRepository->findAll();
         // Logique pour récupérer les sorties
         return $this->render('sortie/sorties.html.twig',["sorties"=>$sorties]);
     }
-    #[Route('/creer', name: 'creer', methods: ['POST'])]
+    #[Route('/creer', name: 'app_sorties_creer', methods: ['POST'])]
     public function creer(Request $request, EntityManagerInterface $entityManager): Response
     {
         $sortie = new Sortie();
@@ -37,16 +38,23 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', 'Sortie créée avec succès');
 
-            return $this->redirectToRoute('app_sortie...sorties');
+            return $this->redirectToRoute('app_sortie_list'); // Correction: redirection vers la liste des sorties
+
         }
 
         return $this->render('sortie/creer.html.twig', [
             'form' => $form->createView(),
         ]);
     }
+    #[Route('/voir/{id}', name: 'voir', methods: ['GET'])]
+    public function voir(Sortie $sortie): Response
+    {
+        return $this->render('sortie/voir.html.twig', [
+            'sortie' => $sortie,
+        ]);
+    }
 
-
-    #[Route('/modifier', name: 'modifier', methods: ['GET', 'POST'])]
+    #[Route('/modifier/{id}', name: 'modifier', methods: ['GET', 'POST'])]
     public function modifier(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
@@ -57,7 +65,7 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', 'Sortie mise à jour avec succès');
 
-            return $this->redirectToRoute('app_sortie...sorties');
+            return $this->redirectToRoute('app_sortie_list'); // Correction: redirection vers la liste des sorties
         }
 
         return $this->render('sortie/modifier.html.twig', [
@@ -66,17 +74,21 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/supprimer', name: 'supprimer', methods: ['POST'])]
+    #[Route('/sortie/{id}/supprimer', name: 'supprimer', methods: ['GET', 'POST'])]
     public function supprimer(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
+        if ($request->isMethod('POST')) {
+            if ($this->isCsrfTokenValid('supprimer' . $sortie->getId(), $request->request->get('_token'))) {
+                $entityManager->remove($sortie);
+                $entityManager->flush();
 
-        if ($this->isCsrfTokenValid('supprimer'.$sortie->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($sortie);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Sortie supprimée avec succès');
+                $this->addFlash('success', 'Sortie supprimée avec succès');
+                return $this->redirectToRoute('app_sortie_list');
+            }
         }
 
-        return $this->redirectToRoute('app_sortie...sorties');
+        return $this->render('sortie/supprimer.html.twig', [
+            'sortie' => $sortie,
+        ]);
     }
 }
