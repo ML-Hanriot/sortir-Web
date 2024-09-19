@@ -14,10 +14,11 @@ use Symfony\Component\Routing\Attribute\Route;
 class SortieController extends AbstractController
 {
      #[Route('/sorties', name: 'app_sorties')]
-    public function sorties(): Response
+    public function sorties(SortieRepository $sortieRepository): Response
     {
+        $sorties = $sortieRepository->findAll();
         // Logique pour récupérer les sorties
-        return $this->render('sortie/sorties.html.twig');
+        return $this->render('sortie/sorties.html.twig',["sorties"=>$sorties]);
     }
     #[Route('/creer', name: 'creer', methods: ['POST'])]
     public function creer(Request $request, EntityManagerInterface $entityManager): Response
