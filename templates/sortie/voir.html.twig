@@ -1,3 +1,4 @@
+{#marie laure#}
 {% extends 'base.html.twig' %}
 
 {% block body %}
@@ -5,16 +6,16 @@
 
     <div class="d-flex">
         <div>
-            Nom de la sortie : {{ Sortie.nom }}
-            Date et heure de la sortie : {{ Sortie.dateHeureDebut }}
-            Date limite d'inscription : {{ Sortie.dateLimiteInscription }}
-            Nombre de places : {{ Sortie.nbInscriptionsMax }}
-            Durée : {{ Sortie.duree }} minutes
-            Description et infos : {{ Sortie.infosSortie }}
+            Nom de la sortie : {{ sortie.nom }}
+            Date et heure de la sortie : {{ sortie.dateHeureDebut }}
+            Date limite d'inscription : {{ sortie.dateLimiteInscription }}
+            Nombre de places : {{ sortie.nbInscriptionsMax }}
+            Durée : {{ sortie.duree }} minutes
+            Description et infos : {{ sortie.infosSortie }}
         </div>
         <div>
-            Campus : {{ Sortie.campus }}
-            Lieu : {{ Sortie.lieu }}
+            Campus : {{ sortie.campus }}
+            Lieu : {{ sortie.lieu }}
             Rue :
             Code postal :
             Latitude :
