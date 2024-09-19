@@ -1,0 +1,174 @@
+/* Julie */
+/* Style général pour la page */
+
+/* Conteneur principal du formulaire */
+form {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Titre principal */
+h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+/* Style pour les labels et les champs */
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="datetime-local"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: none;
+    height: 100px;
+}
+
+/* Alignement des colonnes */
+form div {
+    display: inline-block;
+    width: 48%;
+    vertical-align: top;
+}
+
+form div.left-column {
+    margin-right: 2%;
+}
+
+form div.right-column {
+    margin-left: 2%;
+}
+
+/* Durée avec unité (minutes) */
+input[type="number"] {
+    width: 70px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+span {
+    display: inline-block;
+    line-height: 34px;
+    vertical-align: middle;
+}
+
+/* Coordonnées */
+input.coordonnees {
+    width: 48%;
+    display: inline-block;
+    margin-right: 2%;
+}
+
+/* Bouton Ajouter un Lieu */
+#add_lieu {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    text-align: center;
+    line-height: 36px;
+    padding: 0;
+    margin-left: 10px;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid #000;
+    border-radius: 50%;
+}
+
+#add_lieu:hover {
+    background-color: #ddd;
+}
+
+/* Style des boutons de soumission */
+.actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 1px solid #000;
+    background-color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 0 15px;
+}
+
+button:hover {
+    background-color: #ddd;
+}
+
+/* Style des liens en haut à droite */
+.nav-links {
+    position: absolute;
+    top: 20px;
+    right: 50px;
+}
+
+.nav-links a {
+    margin-left: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    color: #007BFF;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+/* Logo */
+.logo {
+    position: absolute;
+    top: 20px;
+    left: 50px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Style responsive */
+@media (max-width: 768px) {
+    form div {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .actions button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .logo {
+        left: 20px;
+        font-size: 20px;
+    }
+
+    .nav-links {
+        top: 15px;
+        right: 20px;
+    }
+
+    input.coordonnees {
+        width: 100%;
+    }
+}
