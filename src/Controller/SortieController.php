@@ -11,16 +11,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/sorties', name: 'app_')]
 class SortieController extends AbstractController
 {
-     #[Route('/sorties', name: 'app_sorties')]
+     #[Route('/', name: 'sorties')]
     public function sorties(SortieRepository $sortieRepository): Response
     {
         $sorties = $sortieRepository->findAll();
         // Logique pour récupérer les sorties
         return $this->render('sortie/sorties.html.twig',["sorties"=>$sorties]);
     }
-    #[Route('/creer', name: 'creer', methods: ['POST'])]
+    #[Route('/creer', name: 'creer', methods: ['POST', 'GET'])]
     public function creer(Request $request, EntityManagerInterface $entityManager): Response
     {
         $sortie = new Sortie();
@@ -37,7 +38,7 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', 'Sortie créée avec succès');
 
-            return $this->redirectToRoute('app_sortie...sorties');
+            return $this->render('sortie/creer.html.twig');
         }
 
         return $this->render('sortie/creer.html.twig', [
@@ -57,7 +58,7 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', 'Sortie mise à jour avec succès');
 
-            return $this->redirectToRoute('app_sortie...sorties');
+            return $this->redirectToRoute('app_sorties');
         }
 
         return $this->render('sortie/modifier.html.twig', [
@@ -77,6 +78,6 @@ class SortieController extends AbstractController
             $this->addFlash('success', 'Sortie supprimée avec succès');
         }
 
-        return $this->redirectToRoute('app_sortie...sorties');
+        return $this->redirectToRoute('app_sorties');
     }
 }

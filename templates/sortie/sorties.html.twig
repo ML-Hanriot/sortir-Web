@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sortie{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
     <div class="positionright">
@@ -44,7 +44,9 @@
             </table>
         </div>
         <div>
-            <button type="button">Créer une sortie</button>
+            <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_creer') }}'">
+                Créer une sortie
+            </button>
         </div>
 
     </div>
