@@ -10,7 +10,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 #[UniqueEntity(fields: 'mail')]
 #[UniqueEntity(fields: 'pseudo')]
@@ -36,6 +39,7 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface
     #[Assert\Email(message: "Veuillez entrer une adresse email valide")]
     private ?string $mail = null;
 
+    // #[ORM\Column(name:'motPasse',length: 255)]
     #[ORM\Column(length: 255)]
     //#[Assert\Regexx(pattern:"/^[a-z0-9_-]+$/i", message:"Veuillez utiliser uniquement des lettres, des chiffres, des traits de soulignement et des tirets !")]
     private ?string $motPasse = null;
@@ -266,4 +270,54 @@ return $this;
     {
         return $this->mail;
     }
+    private ?string $plainPassword = null;
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+        return $this;
+    }
+
+    // ...STEPHANE POUR UPLOAD IMAGE
+
+
+    // ...
+
+    #[ORM\Column(name: 'imageName', type: 'string', length: 255, nullable: true)]
+    private ?string $imageName = null;
+    #[Vich\UploadableField(mapping: 'profile_pictures', fileNameProperty: 'imageName')]
+    private ?File $imageFile = null;
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): self
+    {
+        $this->imageFile = $imageFile;
+
+        if ($imageFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageName(?string $imageName): self
+    {
+        $this->imageName = $imageName;
+
+        return $this;
+    }
 }
+
