@@ -1,27 +1,33 @@
+{# templates/profil/modification_profil.html.twig #}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Modifier le profil{% endblock %}
 
 {% block body %}
     <h1>Modifier le profil</h1>
+    {% if participant.imageName %}
+        <img src="{{ asset('uploads/profile_pictures/' ~ participant.imageName) }}" alt="Image de profil">
+    {% endif %}
+    {{ form_start(modifForm) }}
 
-    {{ form_start(registrationForm) }}
+    {{ form_row(modifForm.pseudo) }}
+    {{ form_row(modifForm.nom) }}
+    {{ form_row(modifForm.prenom) }}
+    {{ form_row(modifForm.telephone) }}
+    {{ form_row(modifForm.mail) }}
+    {{ form_row(modifForm.campus) }} {# Afficher le champ campus au-dessus du bouton #}
+    {{ form_row(modifForm.imageFile) }}
+    {# Affichage des champs de mot de passe (le champ RepeatedType génère deux champs automatiquement) #}
+    {{ form_errors(modifForm.plainPassword) }} {# Afficher les erreurs du champ de mot de passe #}
+    {{ form_row(modifForm.plainPassword.first) }}
+    {{ form_row(modifForm.plainPassword.second) }}
 
-    {{ form_row(registrationForm.pseudo) }}
-    {{ form_row(registrationForm.nom) }}
-    {{ form_row(registrationForm.prenom) }}
-    {{ form_row(registrationForm.telephone) }}
-    {{ form_row(registrationForm.mail) }}
-    {{ form_row(registrationForm.plainPassword) }}
+    <button type="submit" class="btn">Enregistrer</button>
 
-    <!-- Ajout des champs `actif` et `administrateur` -->
-    {{ form_row(registrationForm.actif) }}
-    {{ form_row(registrationForm.administrateur) }}
+    {{ form_end(modifForm) }}
 
-    <button class="btn">Enregistrer</button>
-
-    {{ form_end(registrationForm) }}
-
+    {# Affichage des messages flash #}
     {% for type, messages in app.flashes %}
         {% for message in messages %}
             <div class="alert alert-{{ type }}">

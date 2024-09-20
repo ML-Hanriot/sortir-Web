@@ -24,9 +24,17 @@ security:
             logout:
                 path: app_logout
                 target: app_login
+            # Configuration de ton firewall principal (probablement "main")
+            remember_me:
+                         secret: '%kernel.secret%'  # Utiliser un secret pour sécuriser le cookie
+                         lifetime: 604800             # Durée de vie du cookie (en secondes, ici 1 semaine)
+                         path: /                  # Chemin où le cookie est actif
+                         always_remember_me: false    # Option pour ne pas l'activer automatiquement
+                         remember_me_parameter: '_remember_me' # Nom du paramètre dans le formulaire
 
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/admin/register, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
 
 

@@ -8,10 +8,10 @@
 
  <h1>Créer une sortie</h1>
 
-<form action= "{{ path('app_creer') }}" method="POST">
+<form action="{{ path('app_sorties_creer') }}" method="POST">
 
     <div class="left-column">
-    <label for="nom_sortie">Nom de la sortie :</label>
+    <label for="nom_sortie">Nom de la sortie : </label>
     <input type="text" id="nom_sortie" name="nom_sortie" required>
 
     <label for="date_sortie">Date et heure de la sortie :</label>
@@ -48,7 +48,7 @@
 {#       {% for lieu in lieux %}#}
 {#           <option value="{{ lieu.id }}">{{ lieu.nom }}</option>#}
 {#       {% endfor %}##}
-{#    </select>#}
+    </select>
 {#    <button type="button" id="add_lieu">+</button>#}
 
 {#    <label for="rue">Rue :</label>#}
