@@ -17,7 +17,8 @@ use Symfony\Component\HttpFoundation\File\File;
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 #[UniqueEntity(fields: 'mail')]
 #[UniqueEntity(fields: 'pseudo')]
-class Participant implements UserInterface,PasswordAuthenticatedUserInterface
+class Participant implements UserInterface,PasswordAuthenticatedUserInterface,\Serializable
+//class Participant implements UserInterface,PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -68,6 +69,12 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur')]
     private Collection $sortiesOrganisees;
+
+    #[ORM\Column(name: 'imageName', type: 'string', length: 255, nullable: true)]
+    private ?string $imageName = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTime $updatedAt = null;
 
     public function __construct()
     {
@@ -283,15 +290,41 @@ return $this;
         return $this;
     }
 
-    // ...STEPHANE POUR UPLOAD IMAGE
 
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updatedAt;
+    }
 
-    // ...
+    public function setUpdatedAt(?\DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
-    #[ORM\Column(name: 'imageName', type: 'string', length: 255, nullable: true)]
-    private ?string $imageName = null;
+        return $this;
+    }
+
+    public function serialize(): ?string
+    {
+        return serialize([
+            $this->id,
+            $this->pseudo,
+            $this->mail,
+            $this->motPasse]);
+    }
+
+    public function unserialize(string $data): void
+    {
+        list(
+            $this->id,
+            $this->pseudo,
+            $this->mail,
+            $this->motPasse,
+            ) = unserialize($data, ['allowed_classes' => false]);
+    }
+
     #[Vich\UploadableField(mapping: 'profile_pictures', fileNameProperty: 'imageName')]
     private ?File $imageFile = null;
+
     public function getImageFile(): ?File
     {
         return $this->imageFile;
@@ -302,7 +335,7 @@ return $this;
         $this->imageFile = $imageFile;
 
         if ($imageFile) {
-            $this->updatedAt = new \DateTimeImmutable();
+            $this->updatedAt = new \DateTime();
         }
 
         return $this;
@@ -320,4 +353,3 @@ return $this;
         return $this;
     }
 }
-

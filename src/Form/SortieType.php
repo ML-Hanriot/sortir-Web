@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SortieType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+        public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('nom', TextType::class, [
@@ -37,7 +37,7 @@ class SortieType extends AbstractType
                 'label' => 'Nombre de places',
             ])
             ->add('duree', IntegerType::class, [
-                'label' => 'DurÃ©e (minutes)',
+                'label' => 'Durée (minutes)',
             ])
             ->add('infosSortie', TextareaType::class, [
                 'label' => 'Description et infos',

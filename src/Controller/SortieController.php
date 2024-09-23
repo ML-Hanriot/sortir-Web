@@ -27,7 +27,7 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/creer', name: 'app_creer', methods: ['GET', 'POST'])]
+    #[Route('/creer', name: 'creer', methods: ['GET', 'POST'])]
     public function creer(Request $request, EntityManagerInterface $entityManager, VilleRepository $villeRepository): Response
     {
         $sortie = new Sortie();

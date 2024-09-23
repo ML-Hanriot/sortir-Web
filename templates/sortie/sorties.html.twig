@@ -5,12 +5,16 @@
 {% block body %}
     <div class="positionright">
         Date du jour : {{ "now"|date("d/m/Y") }} <br>
-        Participant : {{ app.user.nom }}
+        {% if app.user %}
+            Participant : {{ app.user.pseudo }}
+        {% else %}
+            Participant : Non connecté
+        {% endif %}
     </div>
     <div>
-        Filtrer les sorties
+        <h2>Filtrer les sorties</h2>
         <div>
-            Campus :
+            <label for="campus">Campus :</label>
             <select name="campus" id="campus">
                 <option value="">Tous les campus</option>
                 {% for campus in campus %}
@@ -57,9 +61,9 @@
                         <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
                         <td>{{ sortie.nbInscriptionsMax }}</td>
                         <td>{{ sortie.etat.libelle }}</td>
-                        <td>{{ sortie.organisateur.nom }}</td>
+                        {# <td>{{ sortie.organisateur.nom }}</td> #}
                         <td>
-                            <a href="{{ path('app_sorties', {'id': sortie.id}) }}">Afficher</a>
+                            <a href="{{ path('app_sorties', {'id': sortie.id}) }}">Afficher Sortie</a>
                             {% if sortie.organisateur == app.user %}
                                 <a href="{{ path('app_modifier', {'id': sortie.id}) }}">Modifier</a>
                                 <a href="{{ path('app_supprimer', {'id': sortie.id}) }}">Supprimer</a>
@@ -75,7 +79,7 @@
             </table>
         </div>
         <div>
-            <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_app_creer') }}'">
+            <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_creer') }}'">
                 Créer une sortie
             </button>
         </div>
