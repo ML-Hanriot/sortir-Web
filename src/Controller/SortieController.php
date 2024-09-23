@@ -2,11 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Form\SortieType;
+use App\Repository\LieuRepository;
+use App\Repository\VilleRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -38,7 +42,7 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', 'Sortie créée avec succès');
 
-            return $this->redirectToRoute('app_sortie_list'); // Correction: redirection vers la liste des sorties
+            return $this->redirectToRoute('app_sorties'); // Correction: redirection vers la liste des sorties
 
         }
 
@@ -65,7 +69,7 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', 'Sortie mise à jour avec succès');
 
-            return $this->redirectToRoute('app_sortie_list'); // Correction: redirection vers la liste des sorties
+            return $this->redirectToRoute('app_sorties');
         }
 
         return $this->render('sortie/modifier.html.twig', [
@@ -83,12 +87,71 @@ class SortieController extends AbstractController
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Sortie supprimée avec succès');
-                return $this->redirectToRoute('app_sortie_list');
+                return $this->redirectToRoute('app_sorties');
             }
         }
 
-        return $this->render('sortie/supprimer.html.twig', [
+        return $this->render('sortie/annulation.html.twig', [
             'sortie' => $sortie,
         ]);
     }
+    //Julie
+    // AJOUT DE ROUTES POUR LES REQUÊTES AJAX
+    #[Route('/api/villes', name: 'api_villes', methods: ['GET'])]
+    public function getVilles(VilleRepository $villeRepository): JsonResponse
+    {
+        $villes = $villeRepository->findAll();
+        $data = [];
+
+        foreach ($villes as $ville) {
+            $data[] = [
+                'id' => $ville->getId(),
+                'nom' => $ville->getNom(),
+                'codePostal' => $ville->getCodePostal()
+            ];
+        }
+
+        return new JsonResponse($data);
+    }
+
+
+    #[Route('/api/lieu/{villeId}', name: 'api_lieux_par_ville', methods: ['GET'])]
+    public function getLieuxParVille(LieuRepository $lieuRepository, int $villeId): JsonResponse
+    {
+        $lieux = $lieuRepository->findBy(['ville' => $villeId]);
+        $data = [];
+
+        foreach ($lieux as $lieu) {
+            $data[] = [
+                'id' => $lieu->getId(),
+                'nom' => $lieu->getNom(),
+                'rue' => $lieu->getRue(),
+                'latitude' => $lieu->getLatitude(),
+                'longitude' => $lieu->getLongitude(),
+            ];
+        }
+
+        return new JsonResponse($data);
+    }
+//    détail d'un lieu spécfique
+    #[Route('/api/lieu/{id}', name: 'api_lieu_details', methods: ['GET'])]
+    public function getLieuDetails(LieuRepository $lieuRepository, int $id): JsonResponse
+    {
+        $lieu = $lieuRepository->find($id);
+
+        if (!$lieu) {
+            return new JsonResponse(['message' => 'Lieu non trouvé'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = [
+            'id' => $lieu->getId(),
+            'nom' => $lieu->getNom(),
+            'rue' => $lieu->getRue(),
+            'latitude' => $lieu->getLatitude(),
+            'longitude' => $lieu->getLongitude(),
+        ];
+
+        return new JsonResponse($data);
+    }
+
 }

@@ -5,69 +5,148 @@
 {#<link rel="stylesheet" href="{{ asset('styles/creer_modifier_sortie.css') }}">#}
 
 {% block body %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const villeSelect = document.getElementById('ville');
+            const lieuSelect = document.getElementById('lieu');
+            const codePostalInput = document.getElementById('code_postal');
+            const rueInput = document.getElementById('rue');
+            const latitudeInput = document.getElementById('latitude');
+            const longitudeInput = document.getElementById('longitude');
+            let lieuxData = {};
+            rueInput.value = "";
+            latitudeInput.value = "";
+            longitudeInput.value = "";
 
- <h1>Créer une sortie</h1>
+            // Charger les villes au chargement de la page
+            fetch('/sortirweb/public/api/villes')
+                .then(response => response.json())
+                .then(villes => {
+                    villes.forEach(ville => {
+                        const option = document.createElement('option');
+                        option.value = ville.id;
+                        option.textContent = `${ville.nom} (${ville.codePostal})`;
+                        villeSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Erreur lors du chargement des villes:', error));
+
+            // Changer les lieux quand une ville est sélectionnée
+            villeSelect.addEventListener('change', function () {
+                const villeId = this.value;
+                lieuSelect.innerHTML = '<option value="">Sélectionnez un lieu</option>'; // Reset des lieux
+                codePostalInput.value = ""; // Réinitialise le code postal
+
+                if (villeId) {
+                    // Mise à jour du code postal en fonction de la ville
+                    const selectedOption = villeSelect.options[villeSelect.selectedIndex];
+                    if (selectedOption) {
+                        const villeText = selectedOption.textContent;
+                        const codePostal = villeText.match(/\(([^)]+)\)/); // Extrait le code postal du texte
+                        if (codePostal) {
+                            codePostalInput.value = codePostal[1];
+                        }
+                    }
+
+                    // Requête pour obtenir les lieux en fonction de la ville sélectionnée
+                    fetch(`/sortirweb/public/api/lieu/${villeId}`)
+                        .then(response => response.json())
+                        .then(lieux => {
+                            lieuxData = {}; // Reset le tableau
+                            lieux.forEach(lieu => {
+                                lieuxData[lieu.id] = lieu; // Stocke le lieu par son ID
+                                const option = document.createElement('option');
+                                option.value = lieu.id;
+                                option.textContent = lieu.nom;
+                                lieuSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Erreur lors du chargement des lieux:', error));
+                }
+            });
+
+            // Changer les informations du lieu quand un lieu est sélectionné
+            lieuSelect.addEventListener('change', function () {
+                const lieuId = this.value; // Récupère l'ID du lieu sélectionné
+                rueInput.value = "";
+                latitudeInput.value = "";
+                longitudeInput.value = "";
+
+                if (lieuId && lieuxData[lieuId]) { // Vérifie si le lieu est dans lieuxData
+                    const lieu = lieuxData[lieuId];
+                    console.log("Lieu sélectionné:", lieu);
+
+                    // Met à jour les champs avec les données du lieu
+                    rueInput.value = lieu.rue;
+                    latitudeInput.value = lieu.latitude;
+                    longitudeInput.value = lieu.longitude;
+                } else {
+                    console.error("Lieu non trouvé dans lieuxData.");
+                }
+            });
+        });
+    </script>
+
+    <h1>Créer une sortie</h1>
 
 <form action="{{ path('app_sorties_creer') }}" method="POST">
 
-    <div class="left-column">
-    <label for="nom_sortie">Nom de la sortie : </label>
-    <input type="text" id="nom_sortie" name="nom_sortie" required>
+        <div class="left-column">
+            <label for="nom_sortie">Nom de la sortie : </label>
+            <input type="text" id="nom_sortie" name="nom_sortie" required>
 
-    <label for="date_sortie">Date et heure de la sortie :</label>
-    <input type="datetime-local" id="date_sortie" name="date_sortie" required>
+            <label for="date_sortie">Date et heure de la sortie :</label>
+            <input type="datetime-local" id="date_sortie" name="date_sortie" required>
 
-    <label for="date_limite">Date limite d'inscription :</label>
-    <input type="date" id="date_limite" name="date_limite" required>
+            <label for="date_limite">Date limite d'inscription :</label>
+            <input type="date" id="date_limite" name="date_limite" required>
 
-    <label for="nombre_places">Nombre de places :</label>
-    <input type="number" id="nombre_places" name="nombre_places" required>
+            <label for="nombre_places">Nombre de places :</label>
+            <input type="number" id="nombre_places" name="nombre_places" required>
 
-    <label for="duree">Durée :</label>
-    <input type="number" id="duree" name="duree" value="90" required>
-    <span>minutes</span>
+            <label for="duree">Durée :</label>
+            <input type="number" id="duree" name="duree" value="90" required>
+            <span>minutes</span>
 
-    <label for="description">Description et infos :</label>
-    <textarea id="description" name="description" rows="4" required></textarea>
+            <label for="description">Description et infos :</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
 
-{#    <label for="campus">Campus :</label>#}
-{#    <input type="text" id="campus" name="campus" required>#}
-{#        <textarea id="description" name="description" rows="4" required></textarea>#}
-    </div>
+            <label for="campus">Campus :</label>
+            <input type="text" id="campus" name="campus" required>
 
-    <div class="right-column">
-{#    <label for="ville">Ville :</label>#}
-{#    <select id="ville" name="ville" required>#}
-{#        {% for ville in villes %}#}
-{#            <option value="{{ ville.id }}">{{ ville.nom }}</option>#}
-{#        {% endfor %}#}
-{#    </select>#}
+        </div>
 
-{#    <label for="lieu">Lieu :</label>#}
-{#    <select id="lieu" name="lieu" required>#}
-{#       {% for lieu in lieux %}#}
-{#           <option value="{{ lieu.id }}">{{ lieu.nom }}</option>#}
-{#       {% endfor %}##}
-    </select>
-{#    <button type="button" id="add_lieu">+</button>#}
+        <div class="right-column">
+            <label for="ville">Ville :</label>
+            <select id="ville" name="ville" required>
+                <option value="">Sélectionnez une ville</option>
+            </select>
 
-{#    <label for="rue">Rue :</label>#}
-{#    <input type="text" id="rue" name="rue" required>#}
+            <label for="lieu">Lieu :</label>
+            <select id="lieu" name="lieu" required>
+                <option value="">Sélectionnez un lieu</option>
+            </select>
 
-{#    <label for="code_postal">Code postal :</label>#}
-{#    <input type="text" id="code_postal" name="code_postal" required>#}
+            <button type="button" id="add_lieu">+</button>
 
-    <label for="latitude">Latitude :</label>
-    <input type="text" id="latitude" name="latitude">
+            <label for="rue">Rue :</label>
+            <input type="text" id="rue" name="rue" required>
 
-    <label for="longitude">Longitude :</label>
-    <input type="text" id="longitude" name="longitude">
-    </div>
+            <label for="code_postal">Code postal :</label>
+            <input type="text" id="code_postal" name="code_postal" required>
 
-    <div class="actions">
-        <button type="submit" name="action" value="enregistrer">Enregistrer</button>
-        <button type="submit" name="action" value="publier">Publier la sortie</button>
-        <button type="submit" name="action" value="annuler">Annuler</button>
-    </div>
-</form>
+            <label for="latitude">Latitude :</label>
+            <input type="text" id="latitude" name="latitude">
+
+            <label for="longitude">Longitude :</label>
+            <input type="text" id="longitude" name="longitude">
+        </div>
+
+        <div class="actions">
+            <button type="submit" name="action" value="enregistrer">Enregistrer</button>
+            <button type="submit" name="action" value="publier">Publier la sortie</button>
+            <button type="submit" name="action" value="annuler">Annuler</button>
+        </div>
+    </form>
+
 {% endblock %}
