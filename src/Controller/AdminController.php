@@ -15,13 +15,15 @@ class AdminController extends AbstractController
             'controller_name' => 'AdminController',
         ]);
     }
+    /*
     #[Route('/admin/campus', name: 'app_campus')]
     public function campus(): Response
     {
+
         return $this->render('admin/campus.html.twig', [
             'controller_name' => 'AdminController',
         ]);
-    }
+    }*/
     #[Route('/admin/campus', name: 'app_newUtilisateur')]
     public function addUtilisateur(): Response
     {

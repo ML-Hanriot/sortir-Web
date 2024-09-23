@@ -4,23 +4,24 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Form\ModifProfilForm;
-use App\Form\RegistrationFormType;
+use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class ParticipantController extends AbstractController
 {
 
     private $entityManager;
+    private ParticipantRepository $participantRepository;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, ParticipantRepository $participantRepository)
     {
         $this->entityManager = $entityManager;
+        $this->participantRepository = $participantRepository;
     }
 
     #[Route('/participant/profil', name: 'app_profil')]
@@ -57,22 +58,24 @@ class ParticipantController extends AbstractController
         {
             if ($form->isValid())
             {
+                /*
                 $imageFile = $form->get('imageFile')->getData();
 
                 if ($imageFile) {
                     $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                     // Crée un nom unique pour le fichier
-                    $newFilename = uniqid() . '.' . $imageFile->guessExtension();
 
+                    $newFilename = uniqid() . '.' . $imageFile->guessExtension();
                     // Déplace le fichier dans le dossier où les images sont stockées
                     $imageFile->move(
                         $this->getParameter('images_directory'), // Assurez-vous d'avoir configuré ce paramètre
                         $newFilename
+
                     );
 
                     // Mettre à jour l'entité avec le nom du fichier
                     $participant->setImageName($newFilename);
-                }
+                }*/
 
                 // Récupérer le nouveau mot de passe s'il est fourni
                 $plainPassword = $form->get('plainPassword')->getData();
@@ -85,7 +88,7 @@ class ParticipantController extends AbstractController
                 }
 
                 // Sauvegarder les autres modifications
-                $this->entityManager->persist($participant);
+              $this->entityManager->persist($participant);
                 $this->entityManager->flush();
 
 

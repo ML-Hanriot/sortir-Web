@@ -1,10 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-{% endblock %}
+{% block title %}Campus{% endblock %}
 
 {% block body %}
-    <h2>Campus</h2>
 
-{% endblock %}
+<table>
+    <thead>
+    <tr>
+        <th>Nom du Campus</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for c in campus %}
+        <tr>
+            <td>{{ c.nom }}</td>
+            <td>
+                <!-- Formulaire pour la suppression -->
+                <form action="{{ path('campus_delete', { id: c.id }) }}" method="post" style="display:inline;">
+                    <button type="submit">Supprimer</button>
+                </form>
 
+                <!-- Lien pour ouvrir le formulaire de modification -->
+                <button onclick="document.getElementById('edit-form-{{ c.id }}').style.display='block'">Modifier</button>
+
+                <!-- Formulaire pour la modification -->
+                <div id="edit-form-{{ c.id }}" style="display:none;">
+                    <form action="{{ path('campus_edit', { id: c.id }) }}" method="post">
+                        <input type="text" name="nom" value="{{ c.nom }}">
+                        <button type="submit">Modifier</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="2">
+            <a href="{{ path('campus_new') }}">Ajouter un nouveau campus</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+{% endblock body %}
