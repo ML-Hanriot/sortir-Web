@@ -39,6 +39,7 @@ class ModifProfilForm extends AbstractType
                 'choice_label' => 'nom', // Assurez-vous que cette propriété existe dans Campus
             ])
             ->add('imageFile', FileType::class, [
+                'required' => false,
                 'constraints' => [
                     new Image([
                         'maxSize' => '2M',
