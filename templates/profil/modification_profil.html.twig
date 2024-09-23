@@ -7,7 +7,7 @@
 {% block body %}
     <h1>Modifier le profil</h1>
     {% if participant.imageName %}
-        <img src="{{ asset('uploads/profile_pictures/' ~ participant.imageName) }}" alt="Image de profil">
+        <img src="{{ asset('uploads/images/' ~ participant.imageName) }}" alt="Image de profil">
     {% endif %}
     {{ form_start(modifForm) }}
 

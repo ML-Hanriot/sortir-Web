@@ -7,43 +7,48 @@ use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Repository\LieuRepository;
 use App\Repository\VilleRepository;
+use App\Repository\CampusRepository;
 use App\Repository\SortieRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
 #[Route('/sorties', name: 'app_')]
 class SortieController extends AbstractController
 {
-     #[Route('/', name: 'sorties')]
-    public function sorties(SortieRepository $sortieRepository): Response
+    #[Route('/', name: 'sorties')]
+    public function sorties(SortieRepository $sortieRepository, CampusRepository $campusRepository): Response
     {
         $sorties = $sortieRepository->findAll();
-        // Logique pour récupérer les sorties
-        return $this->render('sortie/sorties.html.twig',["sorties"=>$sorties]);
+        $campus = $campusRepository->findAll(); // Récupérer tous les campus
+
+        return $this->render('sortie/sorties.html.twig', [
+            'sorties' => $sorties,
+            'campus' => $campus, // Passer la liste des campus à la vue
+        ]);
     }
-    #[Route('/creer', name: 'app_sorties_creer', methods: ['POST'])]
-    public function creer(Request $request, EntityManagerInterface $entityManager): Response
+
+    #[Route('/creer', name: 'creer', methods: ['GET', 'POST'])]
+    public function creer(Request $request, EntityManagerInterface $entityManager, VilleRepository $villeRepository): Response
     {
         $sortie = new Sortie();
         $form = $this->createForm(SortieType::class, $sortie);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // On peut ajouter des actions avant la sauvegarde si nécessaire (ex: assigner l'organisateur)
             $sortie->setOrganisateur($this->getUser()); // Assuming current user is an organizer
 
+
+            // Enregistrer la sortie dans la base de données
             $entityManager->persist($sortie);
             $entityManager->flush();
 
             $this->addFlash('success', 'Sortie créée avec succès');
-
-            return $this->redirectToRoute('app_sorties'); // Correction: redirection vers la liste des sorties
-
+            return $this->redirectToRoute('app_sorties'); // Rediriger vers la liste des sorties
         }
 
         return $this->render('sortie/creer.html.twig', [

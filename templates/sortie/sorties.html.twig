@@ -1,31 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Sortie{% endblock %}
 
 {% block body %}
     <div class="positionright">
-        Date du jour : <br>
-        Participant :
+        Date du jour : {{ "now"|date("d/m/Y") }} <br>
+        {% if app.user %}
+            Participant : {{ app.user.pseudo }}
+        {% else %}
+            Participant : Non connecté
+        {% endif %}
     </div>
     <div>
-        Filtrer les sorties
+        <h2>Filtrer les sorties</h2>
         <div>
-            Campus :
+            <label for="campus">Campus :</label>
+            <select name="campus" id="campus">
+                <option value="">Tous les campus</option>
+                {% for campus in campus %}
+                    <option value="{{ campus.id }}">{{ campus.nom }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div>
             Le nom de la sortie contient :
+            <input type="text" name="nom" id="nom">
         </div>
         <div>
-            Entre :     et
+            Entre : <input type="date" name="date_debut" id="date_debut">
+            et <input type="date" name="date_fin" id="date_fin">
         </div>
         <div class="column">
-            <input type="checkbox" name="organisateur" id="organisateur"><label for="organisateur">Sorties dont je suis l'organisateur/trice</label><br>
-            <input type="checkbox" name="inscrit" id="inscrit"><label for="inscrit">Sorties auxquelles je suis inscrit/e</label><br>
-            <input type="checkbox" name="pasinscrit" id="pasinscrit"><label for="pasinscrit">Sorties auxquelles je ne suis pas inscrit/e</label><br>
-            <input type="checkbox" name="passer" id="passer"><label for="passer">Sorties passées</label>
-        </div>
-        <div>
-           <!-- <a href="{#  {{ path('app_sortie') }}#}" class="btn btn-primary">Crée une sortie</a>-->
+            <input type="checkbox" name="organisateur" id="organisateur">
+            <label for="organisateur">Sorties dont je suis l'organisateur/trice</label><br>
+            <input type="checkbox" name="inscrit" id="inscrit">
+            <label for="inscrit">Sorties auxquelles je suis inscrit/e</label><br>
+            <input type="checkbox" name="pasinscrit" id="pasinscrit">
+            <label for="pasinscrit">Sorties auxquelles je ne suis pas inscrit/e</label><br>
+            <input type="checkbox" name="passer" id="passer">
+            <label for="passer">Sorties passées</label><br>
         </div>
         <div class="tableau">
             <table>
@@ -34,28 +47,26 @@
                     <th scope="col">Nom de la sortie</th>
                     <th scope="col">Date de la sortie</th>
                     <th scope="col">Clôture</th>
-                    <th scope="col">inscrit/places</th>
-                    <th scope="col">Etat</th>
-                    <th scope="col">Inscrit</th>
+                    <th scope="col">Inscrits / Places</th>
+                    <th scope="col">État</th>
                     <th scope="col">Organisateur</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
-
                 <tbody>
                 {% for sortie in sorties %}
                     <tr>
-                        <td>{{ sortie.lieu }}</td>
+                        <td>{{ sortie.nom }}</td>
                         <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
                         <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
                         <td>{{ sortie.nbInscriptionsMax }}</td>
                         <td>{{ sortie.etat.libelle }}</td>
-                        <td>{{ sortie.organisateur.nom }}</td>
+                        {# <td>{{ sortie.organisateur.nom }}</td> #}
                         <td>
-                            <a href="{{ path('app_sortie_voir', {'id': sortie.id}) }}">Afficher</a>
+                            <a href="{{ path('app_sorties', {'id': sortie.id}) }}">Afficher Sortie</a>
                             {% if sortie.organisateur == app.user %}
-                                <a href="{{ path('app_sortie_modifier', {'id': sortie.id}) }}">Modifier</a>
-                                <a href="{{ path('app_sortie_supprimer', {'id': sortie.id}) }}">Supprimer</a>
+                                <a href="{{ path('app_modifier', {'id': sortie.id}) }}">Modifier</a>
+                                <a href="{{ path('app_supprimer', {'id': sortie.id}) }}">Supprimer</a>
                             {% endif %}
                         </td>
                     </tr>
@@ -68,8 +79,9 @@
             </table>
         </div>
         <div>
-
+            <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_creer') }}'">
+                Créer une sortie
+            </button>
         </div>
-
     </div>
 {% endblock %}
