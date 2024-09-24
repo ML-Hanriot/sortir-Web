@@ -19,7 +19,7 @@
             longitudeInput.value = "";
 
             // Charger les villes au chargement de la page
-            fetch('/sortirweb/public/api/villes')
+            fetch('/sortirweb/public/sorties/api/villes')
                 .then(response => response.json())
                 .then(villes => {
                     villes.forEach(ville => {
@@ -49,7 +49,7 @@
                     }
 
                     // Requête pour obtenir les lieux en fonction de la ville sélectionnée
-                    fetch(`/sortirweb/public/api/lieu/${villeId}`)
+                    fetch(`/sortirweb/public/sorties/api/lieu/${villeId}`)
                         .then(response => response.json())
                         .then(lieux => {
                             lieuxData = {}; // Reset le tableau
@@ -89,7 +89,7 @@
 
     <h1>Créer une sortie</h1>
 
-<form action="{{ path('app_sorties_creer') }}" method="POST">
+<form action="{{ path('app_creer') }}" method="POST">
 
         <div class="left-column">
             <label for="nom_sortie">Nom de la sortie : </label>
@@ -111,8 +111,18 @@
             <label for="description">Description et infos :</label>
             <textarea id="description" name="description" rows="4" required></textarea>
 
+            {#  Pour afficher uniquement le campus de l'utilisateur#}
             <label for="campus">Campus :</label>
-            <input type="text" id="campus" name="campus" required>
+            {% if campus %}
+                <input type="text" id="campus" name="campus" value="{{ campus.nom }}" readonly>
+            {% else %}
+                <select name="campus" id="campus">
+                    <option value="">Sélectionnez un campus</option>
+                    {% for campus in allCampus %}
+                        <option value="{{ campus.id }}">{{ campus.nom }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
 
         </div>
 

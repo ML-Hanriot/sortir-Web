@@ -16,9 +16,16 @@
         <div>
             <label for="campus">Campus :</label>
             <select name="campus" id="campus">
-                <option value="">Tous les campus</option>
-                {% for campus in campus %}
-                    <option value="{{ campus.id }}">{{ campus.nom }}</option>
+                {% if showAllCampusOption %}
+                    <option value="">Tous les campus</option>
+                {% endif %}
+                {% if userCampus %}
+                    <option value="{{ userCampus.id }}">{{ userCampus.nom }}</option>
+                {% endif %}
+                {% for campus in allCampus %}
+                    {% if not userCampus or campus.id != userCampus.id %}
+                        <option value="{{ campus.id }}">{{ campus.nom }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
         </div>
