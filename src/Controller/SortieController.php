@@ -21,7 +21,6 @@ class SortieController extends AbstractController
     #[Route('/', name: 'sorties')]
     public function sorties(Request $request, SortieRepository $sortieRepository, CampusRepository $campusRepository): Response
     {
-        // Récupération des filtres directement depuis la requête GET
         $filters = [
             'campus' => $request->query->get('campus'),
             'nom' => $request->query->get('nom'),
@@ -33,8 +32,23 @@ class SortieController extends AbstractController
             'passer' => $request->query->get('passer') ? true : null,
         ];
 
+        // Récupérer toutes les sorties avec les filtres
         $sorties = $sortieRepository->findByFilters($filters);
         $campus = $campusRepository->findAll();
+
+        // Vérifier l'inscription de l'utilisateur pour chaque sortie
+        $user = $this->getUser();
+        foreach ($sorties as $sortie) {
+            $isInscrit = false;
+            foreach ($sortie->getParticipants() as $participant) {
+                if ($participant === $user) {
+                    $isInscrit = true;
+                    break;
+                }
+            }
+            // Ajouter une propriété temporaire "isInscrit" pour savoir si l'utilisateur est inscrit
+            $sortie->isInscrit = $isInscrit;
+        }
 
         return $this->render('sortie/sorties.html.twig', [
             'sorties' => $sorties,
@@ -42,6 +56,7 @@ class SortieController extends AbstractController
             'filters' => $filters,
         ]);
     }
+
 
     #[Route('/creer', name: 'creer', methods: ['GET', 'POST'])]
     public function creer(Request $request, EntityManagerInterface $entityManager, VilleRepository $villeRepository): Response

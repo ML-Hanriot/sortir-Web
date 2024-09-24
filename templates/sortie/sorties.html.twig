@@ -9,7 +9,8 @@
             Participant : Non connecté
         {% endif %}
     </div>
-    <div>
+
+    <div class="filter-container">
         <h2>Filtrer les sorties</h2>
         <form method="get">
             <div>
@@ -29,7 +30,7 @@
                 Entre : <input type="date" name="date_debut" id="date_debut" value="{{ filters.date_debut }}">
                 et <input type="date" name="date_fin" id="date_fin" value="{{ filters.date_fin }}">
             </div>
-            <div>
+            <div class="checkbox-group">
                 <input type="checkbox" name="organisateur" id="organisateur" {% if filters.organisateur %}checked{% endif %}>
                 <label for="organisateur">Sorties dont je suis l'organisateur/trice</label><br>
                 <input type="checkbox" name="inscrit" id="inscrit" {% if filters.inscrit %}checked{% endif %}>
@@ -42,16 +43,18 @@
             <button type="submit" class="btn btn-primary">Filtrer</button>
         </form>
     </div>
-    <div class="tableau">
-        <table>
+
+    <div class="table-container">
+        <table class="styled-table">
             <thead>
             <tr>
                 <th scope="col">Nom de la sortie</th>
                 <th scope="col">Date de la sortie</th>
                 <th scope="col">Clôture</th>
-                <th scope="col">Inscrits / Places</th>
+                <th scope="col">Inscrits / Places</th> <!-- Affichage du nombre d'inscrits et places max -->
                 <th scope="col">État</th>
                 <th scope="col">Organisateur</th>
+                <th scope="col">Inscrit</th> <!-- Nouvelle colonne -->
                 <th scope="col">Actions</th>
             </tr>
             </thead>
@@ -61,9 +64,16 @@
                     <td>{{ sortie.nom }}</td>
                     <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
                     <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
-                    <td>{{ sortie.nbInscriptionsMax }}</td>
+                    <td>{{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}</td> <!-- Nombre d'inscrits -->
                     <td>{{ sortie.etat.libelle }}</td>
                     <td>{{ sortie.organisateur.nom }}</td>
+                    <td>
+                        {% if sortie.isInscrit %}
+                            X
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
                     <td>
                         <a href="{{ path('app_voir', {'id': sortie.id}) }}">Afficher Sortie</a>
                         {% if sortie.organisateur == app.user %}
@@ -74,13 +84,14 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="7">Aucune sortie disponible</td>
+                    <td colspan="8">Aucune sortie disponible</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
-    <div>
+
+    <div class="create-button">
         <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_creer') }}'">
             Créer une sortie
         </button>
