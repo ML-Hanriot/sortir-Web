@@ -272,7 +272,7 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface,\S
 
     public function getPassword(): ?string
     {
-       return $this->motPasse;
+        return $this->motPasse;
     }
 
     //STEPHANE
@@ -280,8 +280,8 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface,\S
     {
         $this->roles = $roles; // Assigne le tableau de rôles à la propriété `roles`
 
-return $this;
-}
+        return $this;
+    }
 
     public function getRoles(): array
     {

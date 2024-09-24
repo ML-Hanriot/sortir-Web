@@ -89,7 +89,7 @@
 
     <h1>Créer une sortie</h1>
 
-<form action="{{ path('app_creer') }}" method="POST">
+    <form action="{{ path('app_creer') }}" method="POST">
 
         <div class="left-column">
             <label for="nom_sortie">Nom de la sortie : </label>
@@ -146,6 +146,18 @@
             <button type="submit" name="action" value="enregistrer">Enregistrer</button>
             <button type="submit" name="action" value="publier">Publier la sortie</button>
             <button type="submit" name="action" value="annuler">Annuler</button>
+            {#  Pour afficher uniquement le campus de l'utilisateur#}
+            <label for="campus">Campus :</label>
+            {% if campus %}
+                <input type="text" id="campus" name="campus" value="{{ campus.nom }}" readonly>
+            {% else %}
+                <select name="campus" id="campus">
+                    <option value="">Sélectionnez un campus</option>
+                    {% for campus in allCampus %}
+                        <option value="{{ campus.id }}">{{ campus.nom }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
         </div>
     </form>
 

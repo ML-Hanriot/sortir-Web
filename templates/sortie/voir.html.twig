@@ -24,21 +24,20 @@
     </div>
     <div>
         <h3>Liste des participants inscrits :</h3>
-
-       <table>
-           <thead>
-             <tr>Pseudo</tr>
-             <tr>Nom</tr>
-           </thead>
-           <tbody>
-                <tr>
-                    {% for inscrit in inscrits %}
+        <table>
+            <thead>
+            <tr>Pseudo</tr>
+            <tr>Nom</tr>
+            </thead>
+            <tbody>
+            <tr>
+                {% for inscrit in inscrits %}
                     <td>{{ Participant.pseudo }}</td>
-                    <td>{{ Participant.prenom . ' ' . Participant.nom }}</td>
-                    {% endfor %}
-                </tr>
-           </tbody>
-       </table>
+                    <td>{{ Participant.prenom ~ ' ' ~ Participant.nom }}</td>
+                {% endfor %}
+            </tr>
+            </tbody>
+        </table>
 
 
 
