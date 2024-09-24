@@ -1,0 +1,122 @@
+h2{
+    text-align: center;
+}
+/* Positionne la date et l'utilisateur à droite */
+.positionright {
+
+    top: 10px;
+    right: 10px;
+    font-size: 14px;
+}
+
+/* Conteneur principal pour la page */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #2b2b2b;
+
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 1.6s ease-out;
+    border-radius: 8px;
+}
+
+/* Section pour les filtres */
+.filter-section {
+    background-color: #494949;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.filter-item {
+    margin-bottom: 15px;
+}
+
+/* Alignement des champs de texte */
+.filter-item label {
+    display: inline-block;
+    width: 250px;
+    font-weight: bold;
+}
+
+.filter-item input[type="text"],
+.filter-item input[type="date"],
+.filter-item select {
+    padding: 8px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Section des cases à cocher */
+.checkbox-section {
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.checkbox-item {
+    margin-bottom: 10px;
+}
+
+.checkbox-item label {
+    margin-left: 10px;
+}
+
+/* Bouton pour créer une sortie */
+.create-sortie {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.create-sortie .btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.create-sortie .btn:hover {
+    background-color: #0056b3;
+}
+
+/* Section du tableau */
+.table-section {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+
+}
+
+thead {
+    background-color: #007bff;
+    color: white;
+}
+
+table tbody tr:hover {
+    /*background-color: #f1f1f1;*/
+}
+
+table a {
+    color: #007bff;
+    text-decoration: none;
+    padding: 5px 10px;
+
+}
+
+table a:hover {
+    text-decoration: underline;
+}

@@ -33,6 +33,7 @@ class RegistrationController extends AbstractController
 
             // Assurez-vous que le champ actif est défini
             $user->setActif($form->get('actif')->getData() ?? true); // Valeur par défaut à true
+            $user->setUpdatedAt(new \DateTime());
 
             $entityManager->persist($user);
             $entityManager->flush();

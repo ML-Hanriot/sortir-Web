@@ -34,6 +34,11 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface,\S
     private ?string $prenom = null;
 
     #[ORM\Column(length: 10)]
+    #[Assert\NotBlank(message: "Veuillez fournir votre numéro de téléphone")]
+    #[Assert\Regex(
+        pattern: '/^\+?[0-9]{10,15}$/',
+        message: "Le numéro de téléphone doit contenir entre 10 chiffres"
+    )]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 180,unique: true)]
@@ -42,7 +47,11 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface,\S
 
     // #[ORM\Column(name:'motPasse',length: 255)]
     #[ORM\Column(length: 255)]
-    //#[Assert\Regexx(pattern:"/^[a-z0-9_-]+$/i", message:"Veuillez utiliser uniquement des lettres, des chiffres, des traits de soulignement et des tirets !")]
+    #[Assert\NotBlank(message: "Veuillez fournir un mot de passe")]
+    #[Assert\Length(
+        min: 6,
+        minMessage: "Le mot de passe doit comporter au moins {{ limit }} caractères."
+    )]
     private ?string $motPasse = null;
 
     #[ORM\Column]
@@ -52,6 +61,17 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface,\S
     private ?bool $actif = null;
 
     #[ORM\Column(length: 50,unique: true)]
+    #[Assert\NotBlank(message: "Veuillez fournir un pseudo")]
+    #[Assert\Length(
+        min: 3,
+        max: 50,
+        minMessage: "Le pseudo doit comporter au moins {{ limit }} caractères.",
+        maxMessage: "Le pseudo ne peut pas dépasser {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-Z0-9_]+$/',
+        message: "Le pseudo ne doit contenir que des lettres, des chiffres et des traits de soulignement."
+    )]
     private ?string $pseudo = null;
 
     #[ORM\ManyToOne(inversedBy: 'participants')]

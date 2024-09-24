@@ -36,6 +36,7 @@ class SortieController extends AbstractController
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
             // On peut ajouter des actions avant la sauvegarde si nécessaire (ex: assigner l'organisateur)
             $sortie->setOrganisateur($this->getUser()); // Assuming current user is an organizer
@@ -49,10 +50,13 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_sorties'); // Rediriger vers la liste des sorties
         }
 
+
         return $this->render('sortie/creer.html.twig', [
             'form' => $form->createView(),
+
         ]);
     }
+
     #[Route('/voir/{id}', name: 'voir', methods: ['GET'])]
     public function voir(Sortie $sortie): Response
     {

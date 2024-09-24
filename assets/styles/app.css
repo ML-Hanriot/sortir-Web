@@ -1,30 +1,124 @@
-html,body {
+/* Style général pour le body */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;  /* Couleur de fond sobre et neutre */
+    color: #333;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    margin:0;
-    background-color: #4a4a4c;
-    color: white;
-    height:100%;
-}
-main{
-    flex:1;
-}
-form{
-    margin-top: 30vh;
-    text-align: center;
-}
-footer {
-    text-align: center;
-    padding-top: 20px;
-    height: 5%;
+    min-height: 100vh;  /* Pour assurer que le body prend la hauteur complète */
+    justify-content: space-between;  /* Pour gérer le positionnement du footer */
 }
 header{
-    margin-bottom: 5vh;
+    background-color: #fff;  /* Fond blanc pour le formulaire */
 }
+
 a{
-    color: white;
     text-decoration: none;
 }
-header,footer{
-    background-color: #1c1c1c;
+
+/* Style pour le formulaire de connexion (register) */
+.register {
+    background-color: #fff;  /* Fond blanc pour le formulaire */
+    max-width: 400px;
+    margin: 10% auto;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  /* Légère ombre pour effet de profondeur */
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Titres */
+.register h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #000;  /* Texte noir */
+}
+
+/* Labels */
+.register label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #333;  /* Couleur sobre pour les labels */
+    text-align: left;
+}
+
+/* Champs de saisie */
+.register input[type="text"],
+.register input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Bouton de soumission */
+.register button.btn {
+    background-color: #007bff;  /* Bouton bleu vif */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+.register button.btn:hover {
+    background-color: #0056b3;  /* Bleu plus foncé au survol */
+}
+
+/* Checkbox container */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+/* Style checkbox */
+.checkbox-container input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Messages d'erreur */
+.alert.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/* Style des liens */
+.register a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.register a:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+footer {
+    background-color: #333;  /* Fond sombre du footer */
+    color: #fff;  /* Texte blanc */
+    text-align: center;  /* Centrage du texte du footer */
+    padding: 10px 0;
+    width: 100%;
+    margin-top: auto;  /* Permet de coller le footer en bas de page */
+}
+
+/* Gestion du responsive */
+@media (max-width: 480px) {
+    .register {
+        padding: 20px;
+        margin: 20px;
+    }
 }

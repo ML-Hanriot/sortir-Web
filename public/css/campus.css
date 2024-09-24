@@ -1,0 +1,80 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background-color: #8a8a8a;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    height: 100vh;
+    margin: 0;
+}
+
+h1,h3 {
+    text-align: center;
+}
+
+.search-form {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.search-input {
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.campus-column,
+.actions-column {
+    width: 50%;
+}
+
+.actions-column {
+    white-space: nowrap;
+}
+
+.action-buttons {
+    display: flex; /* Utilise Flexbox pour aligner les boutons horizontalement */
+    gap: 10px; /* Espace entre les boutons */
+    justify-content: space-evenly; /* Aligne les boutons à gauche */
+}
+
+table {
+    border-collapse: collapse;
+    width: 80%;
+    margin: 20px auto;
+    background-color: #3e3e3e;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+th, td {
+    text-align: center;
+    padding: 15px;
+    border: 1px solid #ccc;
+}
+
+th {
+    background-color: #2b2b2b;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #4c4c4c;
+}
+
+button {
+    background-color: #5cb85c;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
