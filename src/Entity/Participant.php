@@ -54,14 +54,9 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface,\S
     #[ORM\Column(length: 50,unique: true)]
     private ?string $pseudo = null;
 
-//    #[ORM\ManyToOne(inversedBy: 'participants')]
-//    #[ORM\JoinColumn(nullable: false)]
-//    private ?Campus $campus = null;
-
-     #[ORM\ManyToOne(targetEntity: Campus::class)]
-     #[ORM\JoinColumn(nullable: false)]
-     private $campus;
-
+    #[ORM\ManyToOne(inversedBy: 'participants')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Campus $campus = null;
 
     /**
      * @var Collection<int, Sortie>
