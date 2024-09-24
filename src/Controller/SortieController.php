@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\Form\FilterType;
 use App\Form\SortieType;
 use App\Repository\LieuRepository;
 use App\Repository\VilleRepository;
@@ -18,14 +19,27 @@ use Symfony\Component\Routing\Attribute\Route;
 class SortieController extends AbstractController
 {
     #[Route('/', name: 'sorties')]
-    public function sorties(SortieRepository $sortieRepository, CampusRepository $campusRepository): Response
+    public function sorties(Request $request, SortieRepository $sortieRepository, CampusRepository $campusRepository): Response
     {
-        $sorties = $sortieRepository->findAll();
-        $campus = $campusRepository->findAll(); // Récupérer tous les campus
+        // Récupération des filtres directement depuis la requête GET
+        $filters = [
+            'campus' => $request->query->get('campus'),
+            'nom' => $request->query->get('nom'),
+            'date_debut' => $request->query->get('date_debut'),
+            'date_fin' => $request->query->get('date_fin'),
+            'organisateur' => $request->query->get('organisateur') ? $this->getUser() : null,
+            'inscrit' => $request->query->get('inscrit') ? $this->getUser() : null,
+            'pasinscrit' => $request->query->get('pasinscrit') ? $this->getUser() : null,
+            'passer' => $request->query->get('passer') ? true : null,
+        ];
+
+        $sorties = $sortieRepository->findByFilters($filters);
+        $campus = $campusRepository->findAll();
 
         return $this->render('sortie/sorties.html.twig', [
             'sorties' => $sorties,
-            'campus' => $campus, // Passer la liste des campus à la vue
+            'campus' => $campus,
+            'filters' => $filters,
         ]);
     }
 

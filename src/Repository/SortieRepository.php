@@ -6,9 +6,6 @@ use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Sortie>
- */
 class SortieRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,28 +13,52 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
-    //    /**
-    //     * @return Sortie[] Returns an array of Sortie objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findByFilters(array $filters, $user = null)
+    {
+        $qb = $this->createQueryBuilder('s');
 
-    //    public function findOneBySomeField($value): ?Sortie
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (!empty($filters['campus'])) {
+            $qb->andWhere('s.campus = :campus')
+                ->setParameter('campus', $filters['campus']);
+        }
+
+        if (!empty($filters['nom'])) {
+            $qb->andWhere('s.nom LIKE :nom')
+                ->setParameter('nom', '%' . $filters['nom'] . '%');
+        }
+
+        if (!empty($filters['date_debut'])) {
+            $qb->andWhere('s.dateHeureDebut >= :date_debut')
+                ->setParameter('date_debut', $filters['date_debut']);
+        }
+
+        if (!empty($filters['date_fin'])) {
+            $qb->andWhere('s.dateHeureDebut <= :date_fin')
+                ->setParameter('date_fin', $filters['date_fin']);
+        }
+
+        if (!empty($filters['organisateur']) && $user) {
+            $qb->andWhere('s.organisateur = :user')
+                ->setParameter('user', $user);
+        }
+
+        if (!empty($filters['inscrit']) && $user) {
+            $qb->join('s.inscriptions', 'i')
+                ->andWhere('i.participant = :user')
+                ->setParameter('user', $user);
+        }
+
+        if (!empty($filters['pasinscrit']) && $user) {
+            $qb->leftJoin('s.inscriptions', 'i')
+                ->andWhere('i.participant != :user OR i.participant IS NULL')
+                ->setParameter('user', $user);
+        }
+
+        if (!empty($filters['passer'])) {
+            $qb->andWhere('s.dateHeureDebut < :now')
+                ->setParameter('now', new \DateTime());
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }
