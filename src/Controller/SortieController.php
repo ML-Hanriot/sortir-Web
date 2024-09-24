@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
-use App\Form\FilterType;
 use App\Form\SortieType;
 use App\Repository\LieuRepository;
 use App\Repository\VilleRepository;

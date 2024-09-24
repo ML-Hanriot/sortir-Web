@@ -13,48 +13,50 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
-    public function findByFilters(array $filters, $user = null)
+    public function findByFilters(array $filters)
     {
         $qb = $this->createQueryBuilder('s');
 
-        if (!empty($filters['campus'])) {
+        if ($filters['campus']) {
             $qb->andWhere('s.campus = :campus')
                 ->setParameter('campus', $filters['campus']);
         }
 
-        if (!empty($filters['nom'])) {
+        if ($filters['nom']) {
             $qb->andWhere('s.nom LIKE :nom')
                 ->setParameter('nom', '%' . $filters['nom'] . '%');
         }
 
-        if (!empty($filters['date_debut'])) {
+        if ($filters['date_debut']) {
             $qb->andWhere('s.dateHeureDebut >= :date_debut')
                 ->setParameter('date_debut', $filters['date_debut']);
         }
 
-        if (!empty($filters['date_fin'])) {
+        if ($filters['date_fin']) {
             $qb->andWhere('s.dateHeureDebut <= :date_fin')
                 ->setParameter('date_fin', $filters['date_fin']);
         }
 
-        if (!empty($filters['organisateur']) && $user) {
-            $qb->andWhere('s.organisateur = :user')
-                ->setParameter('user', $user);
+        if ($filters['organisateur']) {
+            $qb->andWhere('s.organisateur = :organisateur')
+                ->setParameter('organisateur', $filters['organisateur']);
         }
 
-        if (!empty($filters['inscrit']) && $user) {
-            $qb->join('s.inscriptions', 'i')
-                ->andWhere('i.participant = :user')
-                ->setParameter('user', $user);
+        if ($filters['inscrit']) {
+            // Filtrer les sorties auxquelles l'utilisateur est inscrit
+            $qb->innerJoin('s.inscriptions', 'i') // Joindre les inscriptions
+            ->andWhere('i.participant = :inscrit') // Vérifier le participant inscrit
+            ->setParameter('inscrit', $filters['inscrit']);
         }
 
-        if (!empty($filters['pasinscrit']) && $user) {
+        if ($filters['pasinscrit']) {
+            // Filtrer les sorties auxquelles l'utilisateur n'est pas inscrit
             $qb->leftJoin('s.inscriptions', 'i')
-                ->andWhere('i.participant != :user OR i.participant IS NULL')
-                ->setParameter('user', $user);
+                ->andWhere('(i.participant IS NULL OR i.participant != :pasinscrit)')
+                ->setParameter('pasinscrit', $filters['pasinscrit']);
         }
 
-        if (!empty($filters['passer'])) {
+        if ($filters['passer']) {
             $qb->andWhere('s.dateHeureDebut < :now')
                 ->setParameter('now', new \DateTime());
         }
