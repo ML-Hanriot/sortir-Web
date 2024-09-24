@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\Form\FilterType;
 use App\Form\SortieType;
 use App\Repository\LieuRepository;
 use App\Repository\VilleRepository;
@@ -18,8 +19,23 @@ use Symfony\Component\Routing\Attribute\Route;
 class SortieController extends AbstractController
 {
     #[Route('/', name: 'sorties')]
-    public function sorties(SortieRepository $sortieRepository, CampusRepository $campusRepository): Response
+    public function sorties(Request $request, SortieRepository $sortieRepository, CampusRepository $campusRepository): Response
     {
+        $filters = [
+            'campus' => $request->query->get('campus'),
+            'nom' => $request->query->get('nom'),
+            'date_debut' => $request->query->get('date_debut'),
+            'date_fin' => $request->query->get('date_fin'),
+            'organisateur' => $request->query->get('organisateur') ? $this->getUser() : null,
+            'inscrit' => $request->query->get('inscrit') ? $this->getUser() : null,
+            'pasinscrit' => $request->query->get('pasinscrit') ? $this->getUser() : null,
+            'passer' => $request->query->get('passer') ? true : null,
+        ];
+
+        // Récupérer toutes les sorties avec les filtres
+        $sorties = $sortieRepository->findByFilters($filters);
+        $campus = $campusRepository->findAll();
+
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
 
@@ -39,52 +55,72 @@ class SortieController extends AbstractController
             $userCampus = null;
             $sorties = $sortieRepository->findAll();
         }
+        // Vérifier l'inscription de l'utilisateur pour chaque sortie
+        foreach ($sorties as $sortie) {
+            $isInscrit = false;
+            foreach ($sortie->getParticipants() as $participant) {
+                if ($participant === $user) {
+                    $isInscrit = true;
+                    break;
+                }
+            }
+            // Ajouter une propriété temporaire "isInscrit" pour savoir si l'utilisateur est inscrit
+            $sortie->isInscrit = $isInscrit;
+        }
 
         return $this->render('sortie/sorties.html.twig', [
-            'sorties' => $sorties,            // Les sorties à afficher
+            'sorties' => $sorties,
+            'campus' => $campus,
+            'filters' => $filters,
             'userCampus' => $userCampus,      // Le campus de l'utilisateur (s'il est connecté)
             'allCampus' => $allCampus,        // Tous les campus pour le filtre (si nécessaire)
             'showAllCampusOption' => true     // Variable pour afficher l'option "Tous les campus" ou non
         ]);
     }
 
+
     #[Route('/creer', name: 'creer', methods: ['GET', 'POST'])]
-    public function creer(Request $request, EntityManagerInterface $entityManager, CampusRepository $campusRepository): Response
-  {
-      $user = $this->getUser();
-      $campus = $user ? $user?->getCampus() : null;
+    public function creer(Request $request, EntityManagerInterface $entityManager, VilleRepository $villeRepository,CampusRepository $campusRepository): Response
+    {
+        $user = $this->getUser();
+        $campus = $user ? $user?->getCampus() : null;
 
-      if (!$campus) {
-          $this->addFlash('error', 'Vous n\'êtes associé à aucun campus.');
-          return $this->redirectToRoute('app_sorties');
-      }
+        if (!$campus)
+        {
+            $this->addFlash('error', 'Vous n\'êtes associé à aucun campus.');
+            return $this->redirectToRoute('app_sorties');
+        }
 
-      $sortie = new Sortie();
-      $form = $this->createForm(SortieType::class, $sortie);
-      $form->handleRequest($request);
+        $sortie = new Sortie();
+        $form = $this->createForm(SortieType::class, $sortie);
+        $form->handleRequest($request);
 
-      if ($form->isSubmitted() && $form->isValid()) {
-          $sortie->setOrganisateur($user);
-          $sortie->setCampus($campus); // Associer le campus à la sortie
-          $entityManager->persist($sortie);
-          $entityManager->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $sortie->setOrganisateur($user);
+            $sortie->setCampus($campus); // Associer le campus à la sortie
+            $entityManager->persist($sortie);
+            $entityManager->flush();
 
-          $this->addFlash('success', 'Sortie créée avec succès');
-          return $this->redirectToRoute('app_sorties');
-      }
+            $this->addFlash('success', 'Sortie créée avec succès');
+            return $this->redirectToRoute('app_sorties');
+        }
 
-      return $this->render('sortie/creer.html.twig', [
-          'form' => $form->createView(),
-          'campus' => $campus, // Le campus de l'utilisateur connecté
-          'allCampus' => $campusRepository->findAll(), // Tous les campus pour usage éventuel
-      ]);
-  }
+        return $this->render('sortie/creer.html.twig', [
+            'form' => $form->createView(),
+            'campus' => $campus, // Le campus de l'utilisateur connecté
+            'allCampus' => $campusRepository->findAll(), // Tous les campus pour usage éventuel
+        ]);
+    }
 
     #[Route('/voir/{id}', name: 'voir', methods: ['GET'])]
     public function voir(Sortie $sortie): Response
     {
+        // Récupérer les participants de la sortie (si nécessaire)
+        $participants = $sortie->getParticipants(); // Assure-toi que cette méthode existe dans ta classe Sortie
+
         return $this->render('sortie/voir.html.twig', [
             'sortie' => $sortie,
+            'participants' => $participants, // Passe les participants à la vue si nécessaire
         ]);
     }
 
