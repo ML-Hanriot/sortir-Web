@@ -44,17 +44,18 @@ class SortieRepository extends ServiceEntityRepository
 
         if ($filters['inscrit']) {
             // Filtrer les sorties auxquelles l'utilisateur est inscrit
-            $qb->innerJoin('s.inscriptions', 'i') // Joindre les inscriptions
-            ->andWhere('i.participant = :inscrit') // Vérifier le participant inscrit
+            $qb->innerJoin('s.participants', 'p') // Joindre les participants
+            ->andWhere('p = :inscrit') // Vérifier l'utilisateur parmi les participants
             ->setParameter('inscrit', $filters['inscrit']);
         }
 
         if ($filters['pasinscrit']) {
             // Filtrer les sorties auxquelles l'utilisateur n'est pas inscrit
-            $qb->leftJoin('s.inscriptions', 'i')
-                ->andWhere('(i.participant IS NULL OR i.participant != :pasinscrit)')
+            $qb->leftJoin('s.participants', 'p')
+                ->andWhere('p IS NULL OR p != :pasinscrit')
                 ->setParameter('pasinscrit', $filters['pasinscrit']);
         }
+
 
         if ($filters['passer']) {
             $qb->andWhere('s.dateHeureDebut < :now')

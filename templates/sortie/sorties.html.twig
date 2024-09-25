@@ -16,38 +16,32 @@
             <div>
                 <label for="campus">Campus :</label>
                 <select name="campus" id="campus">
-                    {% if showAllCampusOption %}
-                        <option value="">Tous les campus</option>
-                    {% endif %}
-                    {% if userCampus %}
-                        <option value="{{ userCampus.id }}">{{ userCampus.nom }}</option>
-                    {% endif %}
-                    {% for campus in allCampus %}
-                        {% if not userCampus or campus.id != userCampus.id %}
-                            <option value="{{ campus.id }}">{{ campus.nom }}</option>
-                        {% endif %}
+                    <option value="">Tous les campus</option>
+                    {% for c in campus %}
+                        <option value="{{ c.id }}" {% if filters.campus == c.id %}selected{% endif %}>{{ c.nom }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <label for="nom">Le nom de la sortie contient :</label>
-            <input type="text" name="nom" id="nom" value="{{ filters.nom }}">
-    </div>
-    <div>
-        Entre : <input type="date" name="date_debut" id="date_debut" value="{{ filters.date_debut }}">
-        et <input type="date" name="date_fin" id="date_fin" value="{{ filters.date_fin }}">
-    </div>
-    <div class="checkbox-group">
-        <input type="checkbox" name="organisateur" id="organisateur" {% if filters.organisateur %}checked{% endif %}>
-        <label for="organisateur">Sorties dont je suis l'organisateur/trice</label><br>
-        <input type="checkbox" name="inscrit" id="inscrit" {% if filters.inscrit %}checked{% endif %}>
-        <label for="inscrit">Sorties auxquelles je suis inscrit/e</label><br>
-        <input type="checkbox" name="pasinscrit" id="pasinscrit" {% if filters.pasinscrit %}checked{% endif %}>
-        <label for="pasinscrit">Sorties auxquelles je ne suis pas inscrit/e</label><br>
-        <input type="checkbox" name="passer" id="passer" {% if filters.passer %}checked{% endif %}>
-        <label for="passer">Sorties passées</label><br>
-    </div>
-    <button type="submit" class="btn btn-primary">Filtrer</button>
-    </form>
+            <div>
+                <label for="nom">Le nom de la sortie contient :</label>
+                <input type="text" name="nom" id="nom" value="{{ filters.nom }}">
+            </div>
+            <div>
+                Entre : <input type="date" name="date_debut" id="date_debut" value="{{ filters.date_debut }}">
+                et <input type="date" name="date_fin" id="date_fin" value="{{ filters.date_fin }}">
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" name="organisateur" id="organisateur" {% if filters.organisateur %}checked{% endif %}>
+                <label for="organisateur">Sorties dont je suis l'organisateur/trice</label><br>
+                <input type="checkbox" name="inscrit" id="inscrit" {% if filters.inscrit %}checked{% endif %}>
+                <label for="inscrit">Sorties auxquelles je suis inscrit/e</label><br>
+                <input type="checkbox" name="pasinscrit" id="pasinscrit" {% if filters.pasinscrit %}checked{% endif %}>
+                <label for="pasinscrit">Sorties auxquelles je ne suis pas inscrit/e</label><br>
+                <input type="checkbox" name="passer" id="passer" {% if filters.passer %}checked{% endif %}>
+                <label for="passer">Sorties passées</label><br>
+            </div>
+            <button type="submit" class="btn btn-primary">Filtrer</button>
+        </form>
     </div>
 
     <div class="table-container">
@@ -70,13 +64,7 @@
                     <td>{{ sortie.nom }}</td>
                     <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
                     <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
-                    <td>
-                        {% if sortie.participants is defined %}
-                            {{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}
-                        {% else %}
-                            0 / {{ sortie.nbInscriptionsMax }}
-                        {% endif %}
-                    </td>
+                    <td>{{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}</td> <!-- Nombre d'inscrits -->
                     <td>{{ sortie.etat.libelle }}</td>
                     <td>{{ sortie.organisateur.nom }}</td>
                     <td>
