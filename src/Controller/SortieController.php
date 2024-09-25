@@ -23,52 +23,63 @@ class SortieController extends AbstractController
     #[Route('/', name: 'sorties')]
     public function sorties(Request $request, SortieRepository $sortieRepository, CampusRepository $campusRepository): Response
     {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Récupérer le campus de l'utilisateur connecté, s'il en a un
+        $userCampus = $user ? $user->getCampus() : null;
+
+        // Récupérer le campus sélectionné depuis les filtres
+        $selectedCampus = $request->query->get('campus', $userCampus ? $userCampus->getId() : null);
+
         $filters = [
-            'campus' => $request->query->get('campus'),
+            'campus' => $selectedCampus,
             'nom' => $request->query->get('nom'),
             'date_debut' => $request->query->get('date_debut'),
             'date_fin' => $request->query->get('date_fin'),
-            'organisateur' => $request->query->get('organisateur') ? $this->getUser() : null,
-            'inscrit' => $request->query->get('inscrit') ? $this->getUser() : null,
-            'pasinscrit' => $request->query->get('pasinscrit') ? $this->getUser() : null,
+            'organisateur' => $request->query->get('organisateur') ? $user : null,
+            'inscrit' => $request->query->get('inscrit') ? $user : null,
+            'pasinscrit' => $request->query->get('pasinscrit') ? $user : null,
             'passer' => $request->query->get('passer') ? true : null,
         ];
 
         // Récupérer toutes les sorties avec les filtres
-        $sorties = $sortieRepository->findByFilters($filters);
+        //$sorties = $sortieRepository->findByFilters($filters);
+        // Vérifier si le campus est tous les campus et qu'aucun autre filtre n'est activé
+        if (empty($filters['campus']) && empty($filters['nom']) && empty($filters['date_debut']) && empty($filters['date_fin']) &&
+            empty($filters['organisateur']) && empty($filters['inscrit']) && empty($filters['pasinscrit']) &&
+            empty($filters['passer'])) {
+
+            // Récupérer toutes les sorties
+            $sorties = $sortieRepository->findAll();
+        } else {
+            // Récupérer les sorties avec les filtres
+            $sorties = $sortieRepository->findByFilters($filters);
+        }
         $campus = $campusRepository->findAll();
 
-        // Récupérer l'utilisateur connecté
-        $user = $this->getUser();
         $filteredSorties = []; // Tableau pour les sorties filtrées
 
         // Vérifier l'inscription de l'utilisateur pour chaque sortie
         foreach ($sorties as $sortie) {
-            $isInscrit = false;
-            foreach ($sortie->getParticipants() as $participant) {
-                if ($participant === $user) {
-                    $isInscrit = true;
-                    break;
-                }
-            }
-            // Ajouter une propriété temporaire "isInscrit" pour savoir si l'utilisateur est inscrit
+            $isInscrit = in_array($user, $sortie->getParticipants()->toArray(), true);
             $sortie->isInscrit = $isInscrit;
 
             // Vérifier si la sortie est ouverte et que la date limite d'inscription n'est pas dépassée
             $currentDate = new \DateTime(); // Date actuelle
-            // Ajouter la logique pour vérifier si la sortie est passée ou non
+
             // Filtrage en fonction des états des sorties
             if ($filters['inscrit'] && $isInscrit) {
                 $filteredSorties[] = $sortie; // Ajouter à la liste filtrée si l'utilisateur est inscrit
             } elseif (!$filters['inscrit'] && $sortie->getEtat()->getLibelle() === Etat::OUVERT && $sortie->getDateLimiteInscription() >= $currentDate) {
                 $filteredSorties[] = $sortie; // Ajouter à la liste filtrée si la sortie est ouverte
-            } elseif ($filters['passer'] && ($sortie->getEtat()->getLibelle() === Etat::PASSER || $sortie->getId() === 5)) {
+            } elseif ($filters['passer'] && $sortie->getEtat()->getLibelle() === Etat::PASSER) {
                 $filteredSorties[] = $sortie; // Ajouter les sorties passées
             }
         }
 
         return $this->render('sortie/sorties.html.twig', [
-            'sorties' => $filteredSorties, // Passer le tableau filtré à la vue
+            'sorties' => $filteredSorties,
             'campus' => $campus,
             'filters' => $filters,
         ]);
