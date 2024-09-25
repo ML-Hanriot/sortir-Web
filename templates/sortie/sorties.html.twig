@@ -109,13 +109,23 @@
                                 <a href="{{ path('app_annuler', {'id': sortie.id}) }}">Annuler</a>
                             {% endif %}
 
-                            {% if app.user in sortie.participants %}
+{#                        marie laure#}
+                        {#affichage du bouton si on est inscrit#}
+                        {% if(app.user in sortie.participants) %}
+                            <a href="{{ path('app_sedesister', {'id': sortie.id}) }}"> - Se désister</a>
+                        {% endif %}
+
+                        {% if (app.user in sortie.participants) %}
                                 <p>Vous êtes inscrit à cette sortie.</p>
-                            {% else %}
-                                <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
-                                    <button type="submit">S'inscrire</button>
-                                </form>
-                            {% endif %}
+                            {# si la date limite d'inscription n'est pas dépassée on affiche s'inscrire,
+                        sinon on n'affiche rien #}
+                        {% else  %}
+{#                            ml#}
+                            {% if "now"|date('Y-m-d') < sortie.dateLimiteInscription|date('Y-m-d') %}
+                              <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
+                                <button type="submit">S'inscrire</button>
+                            </form>
+                        {% endif %}
                         {% endif %}
                     </td>
                 </tr>
