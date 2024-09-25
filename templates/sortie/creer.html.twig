@@ -111,8 +111,18 @@
             <label for="description">Description et infos :</label>
             <textarea id="description" name="description" rows="4" required></textarea>
 
+            {#  Pour afficher uniquement le campus de l'utilisateur#}
             <label for="campus">Campus :</label>
-            <input type="text" id="campus" name="campus" required>
+            {% if campus %}
+                <input type="text" id="campus" name="campus" value="{{ campus.nom }}" readonly>
+            {% else %}
+                <select name="campus" id="campus">
+                    <option value="">Sélectionnez un campus</option>
+                    {% for campus in allCampus %}
+                        <option value="{{ campus.id }}">{{ campus.nom }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
 
         </div>
 
@@ -146,18 +156,7 @@
             <button type="submit" name="action" value="enregistrer">Enregistrer</button>
             <button type="submit" name="action" value="publier">Publier la sortie</button>
             <button type="submit" name="action" value="annuler">Annuler</button>
-            {#  Pour afficher uniquement le campus de l'utilisateur#}
-            <label for="campus">Campus :</label>
-            {% if campus %}
-                <input type="text" id="campus" name="campus" value="{{ campus.nom }}" readonly>
-            {% else %}
-                <select name="campus" id="campus">
-                    <option value="">Sélectionnez un campus</option>
-                    {% for campus in allCampus %}
-                        <option value="{{ campus.id }}">{{ campus.nom }}</option>
-                    {% endfor %}
-                </select>
-            {% endif %}
+
         </div>
     </form>
 

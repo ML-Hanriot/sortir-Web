@@ -38,22 +38,7 @@ class SortieController extends AbstractController
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
 
-        // Récupérer tous les campus
-        $allCampus = $campusRepository->findAll();
 
-        // Initialiser la variable de campus pour la vue
-        $sorties = [];
-
-        if ($user) {
-            // Si l'utilisateur est connecté, récupérer son campus
-            $userCampus = $user->getCampus();
-            // Récupérer les sorties associées au campus de l'utilisateur
-            $sorties = $sortieRepository->findBy(['campus' => $userCampus]);
-        } else {
-            // Si l'utilisateur n'est pas connecté, récupérer toutes les sorties
-            $userCampus = null;
-            $sorties = $sortieRepository->findAll();
-        }
         // Vérifier l'inscription de l'utilisateur pour chaque sortie
         foreach ($sorties as $sortie) {
             $isInscrit = false;
@@ -71,9 +56,6 @@ class SortieController extends AbstractController
             'sorties' => $sorties,
             'campus' => $campus,
             'filters' => $filters,
-            'userCampus' => $userCampus,      // Le campus de l'utilisateur (s'il est connecté)
-            'allCampus' => $allCampus,        // Tous les campus pour le filtre (si nécessaire)
-            'showAllCampusOption' => true     // Variable pour afficher l'option "Tous les campus" ou non
         ]);
     }
 
