@@ -19,7 +19,7 @@
             longitudeInput.value = "";
 
             // Charger les villes au chargement de la page
-            fetch('/sortirweb/public/api/villes')
+            fetch('/sortirweb/public/sorties/api/villes')
                 .then(response => response.json())
                 .then(villes => {
                     villes.forEach(ville => {
@@ -49,7 +49,7 @@
                     }
 
                     // Requête pour obtenir les lieux en fonction de la ville sélectionnée
-                    fetch(`/sortirweb/public/api/lieu/${villeId}`)
+                    fetch(`/sortirweb/public/sorties/api/lieu/${villeId}`)
                         .then(response => response.json())
                         .then(lieux => {
                             lieuxData = {}; // Reset le tableau
