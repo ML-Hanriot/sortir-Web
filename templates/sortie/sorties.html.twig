@@ -85,7 +85,7 @@
                         {% endif %}
 
                         {% if app.user in sortie.participants %}
-                            <p>Vous êtes déjà inscrit à cette sortie.</p>
+                            <p>Vous êtes inscrit à cette sortie.</p>
                         {% else %}
                               <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
                                 <button type="submit">S'inscrire</button>

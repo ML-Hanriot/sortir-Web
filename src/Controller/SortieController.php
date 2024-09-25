@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Repository\LieuRepository;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Doctrine\Common\Collections\ArrayCollection;
 #[Route('/sorties', name: 'app_')]
 class SortieController extends AbstractController
 {
@@ -38,7 +40,7 @@ class SortieController extends AbstractController
 
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
-
+        $filteredSorties = []; // Tableau pour les sorties filtrées
 
         // Vérifier l'inscription de l'utilisateur pour chaque sortie
         foreach ($sorties as $sortie) {
@@ -51,10 +53,22 @@ class SortieController extends AbstractController
             }
             // Ajouter une propriété temporaire "isInscrit" pour savoir si l'utilisateur est inscrit
             $sortie->isInscrit = $isInscrit;
+
+            // Vérifier si la sortie est ouverte et que la date limite d'inscription n'est pas dépassée
+            $currentDate = new \DateTime(); // Date actuelle
+            // Ajouter la logique pour vérifier si la sortie est passée ou non
+            // Filtrage en fonction des états des sorties
+            if ($filters['inscrit'] && $isInscrit) {
+                $filteredSorties[] = $sortie; // Ajouter à la liste filtrée si l'utilisateur est inscrit
+            } elseif (!$filters['inscrit'] && $sortie->getEtat()->getLibelle() === Etat::OUVERT && $sortie->getDateLimiteInscription() >= $currentDate) {
+                $filteredSorties[] = $sortie; // Ajouter à la liste filtrée si la sortie est ouverte
+            } elseif ($filters['passer'] && ($sortie->getEtat()->getLibelle() === Etat::PASSER || $sortie->getId() === 5)) {
+                $filteredSorties[] = $sortie; // Ajouter les sorties passées
+            }
         }
 
         return $this->render('sortie/sorties.html.twig', [
-            'sorties' => $sorties,
+            'sorties' => $filteredSorties, // Passer le tableau filtré à la vue
             'campus' => $campus,
             'filters' => $filters,
         ]);
