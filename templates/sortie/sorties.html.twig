@@ -4,7 +4,11 @@
     <div class="positionright">
         Date du jour : {{ "now"|date("d/m/Y") }} <br>
         {% if app.user %}
-            Participant : {{ app.user.pseudo }}
+            {% if is_granted('ROLE_ADMIN') %}
+                Administrateur : {{ app.user.pseudo }}
+            {% else %}
+                Participant : {{ app.user.pseudo }}
+            {% endif %}
         {% else %}
             Participant : Non connecté
         {% endif %}
@@ -51,10 +55,10 @@
                 <th scope="col">Nom de la sortie</th>
                 <th scope="col">Date de la sortie</th>
                 <th scope="col">Clôture</th>
-                <th scope="col">Inscrits / Places</th> <!-- Affichage du nombre d'inscrits et places max -->
+                <th scope="col">Inscrits / Places</th>
                 <th scope="col">État</th>
                 <th scope="col">Organisateur</th>
-                <th scope="col">Inscrit</th> <!-- Nouvelle colonne -->
+                <th scope="col">Inscrit</th>
                 <th scope="col">Actions</th>
             </tr>
             </thead>
@@ -64,11 +68,11 @@
                     <td>{{ sortie.nom }}</td>
                     <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
                     <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
-                    <td>{{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}</td> <!-- Nombre d'inscrits -->
+                    <td>{{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}</td>
                     <td>{{ sortie.etat.libelle }}</td>
                     <td>{{ sortie.organisateur.nom }}</td>
                     <td>
-                        {% if sortie.isInscrit %}
+                        {% if app.user in sortie.participants %}
                             X
                         {% else %}
                             -
@@ -76,9 +80,17 @@
                     </td>
                     <td>
                         <a href="{{ path('app_voir', {'id': sortie.id}) }}">Afficher Sortie</a>
-                        {% if sortie.organisateur == app.user %}
-                            <a href="{{ path('app_modifier', {'id': sortie.id}) }}">Modifier</a>
-                            <a href="{{ path('app_supprimer', {'id': sortie.id}) }}">Supprimer</a>
+                        {% if sortie.organisateur == app.user or app.user.isAdmin %}
+                            <a href="{{ path('app_annuler', {'id': sortie.id}) }}">Annuler</a>
+                        {% endif %}
+
+                        {% if app.user in sortie.participants %}
+                            <p>Vous êtes déjà inscrit à cette sortie.</p>
+                        {% else %}
+                              <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
+                                <button type="submit">S'inscrire</button>
+                            </form>
+
                         {% endif %}
                     </td>
                 </tr>

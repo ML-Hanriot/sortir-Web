@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Repository\LieuRepository;
+use App\Repository\ParticipantRepository;
 use App\Repository\VilleRepository;
 use App\Repository\CampusRepository;
 use App\Repository\SortieRepository;
@@ -94,14 +95,22 @@ class SortieController extends AbstractController
     }
 
     #[Route('/voir/{id}', name: 'voir', methods: ['GET'])]
-    public function voir(Sortie $sortie): Response
+    public function afficher(int $id, SortieRepository $sortieRepository): Response
     {
-        // Récupérer les participants de la sortie (si nécessaire)
-        $participants = $sortie->getParticipants(); // Assure-toi que cette méthode existe dans ta classe Sortie
+        // Récupérer la sortie par son ID
+        $sortie = $sortieRepository->find($id);
+
+        // Vérifier si la sortie existe
+        if (!$sortie) {
+            throw $this->createNotFoundException('La sortie n\'existe pas.');
+        }
+
+        // Récupérer les participants inscrits via la méthode de l'entité Sortie
+        $inscrits = $sortie->getParticipants();
 
         return $this->render('sortie/voir.html.twig', [
             'sortie' => $sortie,
-            'participants' => $participants, // Passe les participants à la vue si nécessaire
+            'inscrits' => $inscrits,
         ]);
     }
 
@@ -125,9 +134,17 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/sortie/{id}/supprimer', name: 'supprimer', methods: ['GET', 'POST'])]
-    public function supprimer(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
+    #[Route('/sortie/{id}/annuler', name: 'annuler', methods: ['GET', 'POST'])]
+    public function annuler(Request $request, SortieRepository $sortieRepository, EntityManagerInterface $entityManager, int $id): Response
     {
+        // Récupérer la sortie par son ID
+        $sortie = $sortieRepository->find($id);
+
+        // Vérifier si la sortie existe
+        if (!$sortie) {
+            throw $this->createNotFoundException('La sortie n\'existe pas.');
+        }
+
         if ($request->isMethod('POST')) {
             if ($this->isCsrfTokenValid('supprimer' . $sortie->getId(), $request->request->get('_token'))) {
                 $entityManager->remove($sortie);

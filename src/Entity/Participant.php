@@ -81,7 +81,7 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface,\S
     /**
      * @var Collection<int, Sortie>
      */
-    #[ORM\ManyToMany(targetEntity: Sortie::class, inversedBy: 'participants')]
+    #[ORM\ManyToMany(targetEntity: Sortie::class, mappedBy: 'participants')]
     private Collection $sorties;
 
     /**
@@ -161,7 +161,7 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface,\S
         return $this->motPasse;
     }
 
-    public function setMotPasse(string $motPasse): static
+    public function setMotPasse(string $motPasse): self
     {
         $this->motPasse = $motPasse;
 
@@ -307,6 +307,12 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface,\S
     public function setPlainPassword(?string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
+
+        if ($plainPassword) {
+            // Hachage du mot de passe
+            $this->motPasse = password_hash($plainPassword, PASSWORD_BCRYPT);
+        }
+
         return $this;
     }
 
@@ -372,4 +378,9 @@ class Participant implements UserInterface,PasswordAuthenticatedUserInterface,\S
 
         return $this;
     }
+    public function isAdmin(): bool
+    {
+        return $this->isAdministrateur();
+    }
+
 }

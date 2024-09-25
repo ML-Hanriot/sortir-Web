@@ -20,9 +20,9 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
-                'choice_label' => 'nom', // Champ affiché dans la liste déroulante
-                'placeholder' => 'Sélectionnez un campus', // Option pour inciter à choisir
-                'required' => true, // Rendre le champ obligatoire
+                'choice_label' => 'nom',
+                'placeholder' => 'Sélectionnez un campus',
+                'required' => true,
             ])
             ->add('pseudo')
             ->add('nom')
@@ -30,7 +30,8 @@ class RegistrationFormType extends AbstractType
             ->add('telephone')
             ->add('mail')
             ->add('plainPassword', PasswordType::class, [
-                'mapped' => false,
+                'label' => 'Mot de passe',
+                'mapped' => true,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez entrer un mot de passe']),
@@ -44,13 +45,14 @@ class RegistrationFormType extends AbstractType
             ->add('actif', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Actif',
-                'data' => true, // Valeur par défaut
+                'data' => true,
             ])
             ->add('administrateur', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Administrateur',
             ]);
     }
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {

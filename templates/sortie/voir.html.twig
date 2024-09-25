@@ -1,48 +1,51 @@
-{#marie laure#}
 {% extends 'base.html.twig' %}
+
+{% block title %}
+    Afficher une sortie
+{% endblock %}
 
 {% block body %}
     <h2 class="container">Afficher une sortie</h2>
 
-    <div class="d-flex">
+    <div class="d-flex justify-content-between">
         <div>
-            Nom de la sortie : {{ sortie.nom }}
-            Date et heure de la sortie : {{ sortie.dateHeureDebut }}
-            Date limite d'inscription : {{ sortie.dateLimiteInscription }}
-            Nombre de places : {{ sortie.nbInscriptionsMax }}
-            Durée : {{ sortie.duree }} minutes
-            Description et infos : {{ sortie.infosSortie }}
+            <p><strong>Nom de la sortie :</strong> {{ sortie.nom }}</p>
+            <p><strong>Date et heure de la sortie :</strong> {{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</p>
+            <p><strong>Date limite d'inscription :</strong> {{ sortie.dateLimiteInscription|date('d/m/Y') }}</p>
+            <p><strong>Nombre de places :</strong> {{ sortie.nbInscriptionsMax }}</p>
+            <p><strong>Durée :</strong> {{ sortie.duree }} minutes</p>
+            <p><strong>Description et infos :</strong> {{ sortie.infosSortie }}</p>
         </div>
         <div>
-            Campus : {{ sortie.campus }}
-            Lieu : {{ sortie.lieu }}
-            Rue :
-            Code postal :
-            Latitude :
-            Longitude :
+            <p><strong>Campus :</strong> {{ sortie.campus.nom }}</p>
+            <p><strong>Lieu :</strong> {{ sortie.lieu.nom }}</p>
+            <p><strong>Rue :</strong> {{ sortie.lieu.rue }}</p>
+            <p><strong>Latitude :</strong> {{ sortie.lieu.latitude }}</p>
+            <p><strong>Longitude :</strong> {{ sortie.lieu.longitude }}</p>
         </div>
     </div>
+
     <div>
         <h3>Liste des participants inscrits :</h3>
-        <table>
+        <table class="table">
             <thead>
-            <tr>Pseudo</tr>
-            <tr>Nom</tr>
+            <tr>
+                <th>Pseudo</th>
+                <th>Nom</th>
+            </tr>
             </thead>
             <tbody>
-            <tr>
-                {% for inscrit in inscrits %}
-                    <td>{{ Participant.pseudo }}</td>
-                    <td>{{ Participant.prenom ~ ' ' ~ Participant.nom }}</td>
-                {% endfor %}
-            </tr>
+            {% for inscrit in inscrits %}
+                <tr>
+                    <td>{{ inscrit.pseudo }}</td>
+                    <td>{{ inscrit.prenom ~ ' ' ~ inscrit.nom }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">Aucun participant inscrit</td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
-
-
-
     </div>
-{% endblock %}
-
-{% block title %}
 {% endblock %}

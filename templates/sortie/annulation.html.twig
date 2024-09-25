@@ -1,23 +1,23 @@
-{#marie laure#}
+{# annulation.html.twig #}
 {% extends 'base.html.twig' %}
+
+{% block title %}
+    Annuler une sortie
+{% endblock %}
 
 {% block body %}
     <h2 class="container">Annuler une sortie</h2>
 
     <div class="container">
-        Nom de la sortie : {{ Sortie.nom }}
-        {# on ne veut que la date #}
-        Date de la sortie : {{ Sortie.dateHeureDebut }}
-        Campus : {{ Sortie.campus }}
-        Lieu : {{ Sortie.lieu }}
+        Nom de la sortie : {{ sortie.nom }}<br>
+        Date de la sortie : {{ sortie.dateHeureDebut|date('d/m/Y H:i') }}<br> {# Formate la date #}
+        Campus : {{ sortie.campus.nom }}<br> {# Affiche le nom du campus #}
+        Lieu : {{ sortie.lieu.nom }}<br> {# Assurez-vous que Lieu a une propriété nom #}
         Motif : <textarea name="motif" id="motif" cols="30" rows="10"></textarea>
 
         <div class="d-flex">
-            <button>Enregistrer</button>
-            <button>Annuler</button>
+            <button type="submit">Enregistrer</button>
+            <button type="button" onclick="window.history.back();">Annuler</button> {# Utilise l'historique pour revenir en arrière #}
         </div>
     </div>
-{% endblock %}
-
-{% block title %}
 {% endblock %}

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
@@ -17,12 +18,14 @@ class Sortie
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
     #[ORM\Column]
+    #[Assert\Positive]
     private ?int $duree = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -37,7 +40,9 @@ class Sortie
     /**
      * @var Collection<int, Participant>
      */
-    #[ORM\ManyToMany(targetEntity: Participant::class, mappedBy: 'sorties')]
+
+    #[ORM\ManyToMany(targetEntity: Participant::class, inversedBy: 'sorties')]
+    #[ORM\JoinTable(name: 'participant_sortie')]  // Nom explicite de la table de jointure
     private Collection $participants;
 
     #[ORM\ManyToOne(inversedBy: 'sortiesOrganisees')]
@@ -155,6 +160,11 @@ class Sortie
 
         return $this;
     }
+    // Méthode pour vérifier l'inscription
+    public function isInscrit(Participant $participant): bool
+    {
+        return $this->participants->contains($participant);
+    }
 
     public function removeParticipant(Participant $participant): static
     {
@@ -209,6 +219,42 @@ class Sortie
     public function setLieu(?Lieu $lieu): static
     {
         $this->lieu = $lieu;
+
+        return $this;
+    }
+    public function peutSInscrire(): bool
+    {
+        return $this->nbInscriptionsMax > $this->participants->count() && new \DateTime() < $this->dateLimiteInscription;
+    }
+
+    public function inscrireParticipant(Participant $participant): bool
+    {
+        // Vérifiez si le participant est déjà inscrit
+        if ($this->participants->contains($participant)) {
+            return false; // Déjà inscrit
+        }
+
+        // Vérifiez d'autres conditions (date limite, etc.)
+        if ($this->dateLimiteInscription < new \DateTime() || $this->nbInscriptionsMax <= $this->participants->count()) {
+            return false; // Limite atteinte ou date dépassée
+        }
+
+        // Ajoutez le participant
+        $this->participants[] = $participant;
+
+        return true; // Inscription réussie
+    }
+    public $isInscrit; // Ajoutez cette propriété
+
+    // Ajoutez un getter et un setter pour la propriété isInscrit
+    public function getIsInscrit(): ?bool
+    {
+        return $this->isInscrit;
+    }
+
+    public function setIsInscrit(bool $isInscrit): self
+    {
+        $this->isInscrit = $isInscrit;
 
         return $this;
     }
