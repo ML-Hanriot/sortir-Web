@@ -110,8 +110,8 @@
                             {% endif %}
 
 {#                        marie laure#}
-                        {#affichage du bouton si on est inscrit#}
-                        {% if(app.user in sortie.participants) %}
+                        {#affichage du bouton se désister si on est inscrit ET si les dates et heures de debut ne sont pas dépassées #}
+                        {% if(app.user in sortie.participants) and (sortie.dateHeureDebut|date('Y-m-d H:i') > "now"|date('Y-m-d H:i')) %}
                             <a href="{{ path('app_sedesister', {'id': sortie.id}) }}"> - Se désister</a>
                         {% endif %}
 
