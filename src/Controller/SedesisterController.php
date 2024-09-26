@@ -24,11 +24,6 @@ class SedesisterController extends AbstractController
             $entityManager->persist($sortie);
             $entityManager->flush();
 
-            // Ajouter un message de succès
-            $this->addFlash('success', 'Vous vous êtes désinscrit avec succès.');
-        } else {
-            // Si l'utilisateur n'est pas inscrit, renvoyer un message d'erreur
-            $this->addFlash('error', 'Vous n\'êtes pas inscrit à cette sortie.');
         }
 
         // Rediriger vers la liste des sorties ou autre page

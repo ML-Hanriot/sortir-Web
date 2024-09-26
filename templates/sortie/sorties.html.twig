@@ -86,6 +86,11 @@
             </thead>
             <tbody>
             {% for sortie in sorties %}
+                {#ML#}
+{#                archive et masque la sortie si elle est dépassée d'un mois#}
+                {% set date_actuelle = "now"|date('Y-m-d') %}
+                {% set date_un_mois_apres_sortie = sortie.dateHeureDebut|date_modify('+1 month')|date('Y-m-d') %}
+                {% if date_actuelle <= date_un_mois_apres_sortie %}
                 <tr>
                     <td>{{ sortie.nom }}</td>
                     <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
@@ -125,7 +130,7 @@
                               <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
                                 <button type="submit">S'inscrire</button>
                             </form>
-                        {% endif %}
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>
