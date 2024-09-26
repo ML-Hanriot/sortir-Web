@@ -51,4 +51,5 @@ class SinscrireController extends AbstractController
         // Redirection vers la page des sorties
         return $this->redirectToRoute('app_sorties', ['id' => $sortie->getId()]);
     }
+
 }

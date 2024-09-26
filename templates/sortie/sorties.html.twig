@@ -7,18 +7,18 @@
 {% block body %}
 
     <div class="filter-container">
-    <div class="positionright">
-        Date du jour : {{ "now"|date("d/m/Y") }} <br>
-        {% if app.user %}
-            {% if is_granted('ROLE_ADMIN') %}
-                Administrateur : {{ app.user.pseudo }}
+        <div class="positionright">
+            Date du jour : {{ "now"|date("d/m/Y") }} <br>
+            {% if app.user %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    Administrateur : {{ app.user.pseudo }}
+                {% else %}
+                    Participant : {{ app.user.pseudo }}
+                {% endif %}
             {% else %}
-                Participant : {{ app.user.pseudo }}
+                Participant : Non connecté
             {% endif %}
-        {% else %}
-            Participant : Non connecté
-        {% endif %}
-    </div>
+        </div>
         <h2>Filtrer les sorties</h2>
         <form method="get">
             <div class="flex-container">
@@ -86,55 +86,53 @@
             </thead>
             <tbody>
             {% for sortie in sorties %}
-                {#ML#}
-{#                archive et masque la sortie si elle est dépassée d'un mois#}
                 {% set date_actuelle = "now"|date('Y-m-d') %}
                 {% set date_un_mois_apres_sortie = sortie.dateHeureDebut|date_modify('+1 month')|date('Y-m-d') %}
+
                 {% if date_actuelle <= date_un_mois_apres_sortie %}
-                <tr>
-                    <td>{{ sortie.nom }}</td>
-                    <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
-                    <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
-                    <td>{{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}</td>
-                    <td>{{ sortie.etat.libelle }}</td>
-                    <td>{{ sortie.organisateur.nom }}</td>
-                    <td>
-                        {% if app.user in sortie.participants %}
-                            X
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if sortie.etat.libelle == 'Annulée' %}
-                            <p>Motif d'annulation : {{ app.session.get('motif_annulation_' ~ sortie.id) ?? 'Aucun motif fourni' }}</p>
-                        {% else %}
-                            <a href="{{ path('app_voir', {'id': sortie.id}) }}">Afficher Sortie</a>
-                            {% if sortie.organisateur == app.user or app.user.isAdmin %}
-                                <a href="{{ path('app_annuler', {'id': sortie.id}) }}">Annuler</a>
+                    <tr>
+                        <td>{{ sortie.nom }}</td>
+                        <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
+                        <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
+                        <td>{{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}</td>
+                        <td>{{ sortie.etat.libelle }}</td>
+                        <td>{{ sortie.organisateur.nom }}</td>
+                        <td>
+                            {% if app.user in sortie.participants %}
+                                X
+                            {% else %}
+                                -
                             {% endif %}
+                        </td>
+                        <td>
+                            {% if sortie.etat.libelle == 'Annulée' %}
+                                <p>Motif d'annulation : {{ app.session.get('motif_annulation_' ~ sortie.id) ?? 'Aucun motif fourni' }}</p>
+                            {% else %}
+                                <a href="{{ path('app_voir', {'id': sortie.id}) }}">Afficher Sortie</a>
 
-{#                        marie laure#}
-                    {#marie laure#}
-                        {#affichage du bouton se désister si on est inscrit ET si les dates et heures de debut ne sont pas dépassées #}
-                        {% if(app.user in sortie.participants) and (sortie.dateHeureDebut|date('Y-m-d H:i') > "now"|date('Y-m-d H:i')) %}
-                            <a href="{{ path('app_sedesister', {'id': sortie.id}) }}"> - Se désister</a>
-                        {% endif %}
+                                {# Bouton "Annuler" si l'utilisateur est organisateur ou admin #}
+                                {% if sortie.organisateur == app.user or app.user.isAdmin %}
+                                    <a href="{{ path('app_annuler', {'id': sortie.id}) }}">Annuler</a>
+                                {% endif %}
 
-                        {% if (app.user in sortie.participants) %}
-                                <p>Vous êtes inscrit à cette sortie.</p>
-                            {# si la date limite d'inscription n'est pas dépassée on affiche s'inscrire,
-                        sinon on n'affiche rien #}
-                        {% else  %}
-{#                            ml#}
-                            {% if "now"|date('Y-m-d') < sortie.dateLimiteInscription|date('Y-m-d') %}
-                              <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
-                                <button type="submit">S'inscrire</button>
-                            </form>
+                                {# Si l'utilisateur est inscrit et la sortie n'a pas encore commencé #}
+                                {% if app.user in sortie.participants %}
+                                    <p>Vous êtes inscrit à cette sortie.</p>
+                                    {% if sortie.dateHeureDebut|date('Y-m-d H:i') > "now"|date('Y-m-d H:i') %}
+                                        <a href="{{ path('app_sedesister', {'id': sortie.id}) }}"> - Se désister</a>
+                                    {% endif %}
+                                {% else %}
+                                    {# Afficher "S'inscrire" si la date limite d'inscription n'est pas atteinte #}
+                                    {% if "now"|date('Y-m-d') < sortie.dateLimiteInscription|date('Y-m-d') %}
+                                        <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
+                                            <button type="submit">S'inscrire</button>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                {% endif %}
             {% else %}
                 <tr>
                     <td colspan="8">Aucune sortie disponible</td>

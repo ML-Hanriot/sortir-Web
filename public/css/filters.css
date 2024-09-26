@@ -14,12 +14,14 @@
     font-weight: bold;
     margin-bottom: 20px;
     text-align: left;
+
 }
 
 /* Conteneur flex pour organiser les trois colonnes */
 .flex-container {
     display: flex;
     justify-content: space-between;
+
     gap: 20px;
     align-items: flex-start;  /* Aligne les éléments en haut */
 }
@@ -133,4 +135,9 @@
 
 .create-button button:hover {
     background-color: #0056b3;
+}
+.flex-container-int{
+    display: flex;
+    flex-wrap: wrap;
+
 }
