@@ -8,54 +8,51 @@
 
 {% block body %}
 
-    <h1 class="logo">Gestion des Villes</h1>
+    <h1>Gestion des Villes</h1>
 
     <!-- Formulaire de recherche -->
-    <section class="search-section">
-        <h3>Filtrer les villes</h3>
-        <form method="get" action="{{ path('villes_search') }}">
-            <label for="search">Le nom contient :</label>
-            <input type="text" id="search" name="search" value="{{ app.request.get('search') }}" placeholder="Entrer un nom de ville">
-            <button type="submit" class="btn btn-primary">Rechercher</button>
-        </form>
-    </section>
+    <h3>Filtrer les villes</h3>
+    <form method="get" action="{{ path('villes_search') }}" class="search-form">
+        <label for="search">Le nom contient :</label>
+        <input type="text" id="search" name="search" value="{{ app.request.get('search') }}" class="search-input">
+        <button type="submit" class="btn-search">Rechercher</button>
+    </form>
 
-    <main>
-        <div class="table-wrapper">
-            <table class="table">
-                <thead>
+    <div class="villes-table-wrapper">
+        <table class="villes-table">
+            <thead>
+            <tr>
+                <th class="villes-column">Nom de la Ville</th>
+                <th class="actions-column">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for v in villes %}
                 <tr>
-                    <th>Nom de la Ville</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for v in villes %}
-                    <tr>
-                        <td>{{ v.nom }}</td>
-                        <td>
-                            <button class="btn btn-success" onclick="document.getElementById('edit-form-{{ v.id }}').style.display='inline'">Modifier</button>
-                            <form action="{{ path('villes_delete', { id: v.id }) }}" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                    <td>{{ v.nom }}</td>
+                    <td class="actions-column">
+                        <div class="action-buttons"> <!-- Alignement horizontal -->
+                            <button onclick="document.getElementById('edit-form-{{ v.id }}').style.display='block'" class="btn-modify">Modifier</button>
+                            <form action="{{ path('villes_delete', { id: v.id }) }}" method="post" class="delete-form">
+                                <button type="submit" class="btn-delete">Supprimer</button>
                             </form>
-                            <div id="edit-form-{{ v.id }}" style="display:none;">
-                                <form action="{{ path('villes_edit', { id: v.id }) }}" method="post">
-                                    <input type="text" name="nom" value="{{ v.nom }}" placeholder="Modifier le nom" required>
-                                    <button type="submit" class="btn btn-success">Modifier</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-                <tr>
-                    <td></td>
-                    <td>
-                        <a class="btn btn-primary" href="{{ path('villes_new') }}">Ajouter une nouvelle ville</a>
+                        </div>
+                        <div id="edit-form-{{ v.id }}" class="edit-form" style="display:none;">
+                            <form action="{{ path('villes_edit', { id: v.id }) }}" method="post">
+                                <input type="text" name="nom" value="{{ v.nom }}" class="input-modify">
+                                <button type="submit" class="btn-modify-submit">Modifier</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
-
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td>
+                    <a href="{{ path('villes_new') }}" class="btn-add">Ajouter une nouvelle ville</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

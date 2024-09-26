@@ -1,23 +1,37 @@
-{#marie laure#}
-{%  extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+{% endblock %}
 
 {% block body %}
+    <div class="profile-container">
+        <h2>Profil de {{ app.user.pseudo }}</h2>
 
-    <h2>{{ app.user.pseudo }}</h2>
+        <div class="profile-content">
+            <!-- Image de profil à gauche -->
+            {% if participant.imageName %}
+                <img src="{{ asset('uploads/images/' ~ participant.imageName) }}" alt="Image de profil">
 
-    <div>
-        Prénom : {{ app.user.prenom }}<br>
-        Nom : {{ app.user.nom }}<br>
-        Téléphone : {{ app.user.telephone }}<br>
-        Email : {{ app.user.mail }}<br>
-        Campus : {{ app.user.campus.nom }}
+            {% else %}
+                <div class="profile-image">
+                    <img src="{{ asset('images/noimage.png') }}" alt="Image de profil par défaut">
+                </div>
+            {% endif %}
 
+            <!-- Informations utilisateur à droite -->
+            <div class="profile-info">
+                <div><strong>Prénom :</strong> {{ app.user.prenom }}</div>
+                <div><strong>Nom :</strong> {{ app.user.nom }}</div>
+                <div><strong>Téléphone :</strong> {{ app.user.telephone }}</div>
+                <div><strong>Email :</strong> {{ app.user.mail }}</div>
+                <div><strong>Campus :</strong> {{ app.user.campus.nom }}</div>
+            </div>
+        </div>
+
+        <!-- Bouton de modification centré -->
+        <a href="{{ path('profile_edit') }}" class="btn">Modifier le profil</a>
     </div>
-
-    <a href="{{ path('profile_edit') }}" class="btn">Modification</a>
-
-
 {% endblock %}
 
 {% block title %}

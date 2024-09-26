@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Etat;
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use App\Form\SortieType;
+use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\VilleRepository;
@@ -43,79 +45,54 @@ class SortieController extends AbstractController
             'passer' => $request->query->get('passer') ? true : null,
         ];
 
-        // Récupérer toutes les sorties avec les filtres
-        //$sorties = $sortieRepository->findByFilters($filters);
-        // Vérifier si le campus est tous les campus et qu'aucun autre filtre n'est activé
-        if (empty($filters['campus']) && empty($filters['nom']) && empty($filters['date_debut']) && empty($filters['date_fin']) &&
-            empty($filters['organisateur']) && empty($filters['inscrit']) && empty($filters['pasinscrit']) &&
-            empty($filters['passer'])) {
-
-            // Récupérer toutes les sorties
-            $sorties = $sortieRepository->findAll();
-        } else {
             // Récupérer les sorties avec les filtres
-            $sorties = $sortieRepository->findByFilters($filters);
-        }
+        $sorties = $sortieRepository->findByFilters($filters);
+
         $campus = $campusRepository->findAll();
 
-        $filteredSorties = []; // Tableau pour les sorties filtrées
-
-        // Vérifier l'inscription de l'utilisateur pour chaque sortie
-        foreach ($sorties as $sortie) {
-            $isInscrit = in_array($user, $sortie->getParticipants()->toArray(), true);
-            $sortie->isInscrit = $isInscrit;
-
-            // Vérifier si la sortie est ouverte et que la date limite d'inscription n'est pas dépassée
-            $currentDate = new \DateTime(); // Date actuelle
-
-            // Filtrage en fonction des états des sorties
-            if ($filters['inscrit'] && $isInscrit) {
-                $filteredSorties[] = $sortie; // Ajouter à la liste filtrée si l'utilisateur est inscrit
-            } elseif (!$filters['inscrit'] && $sortie->getEtat()->getLibelle() === Etat::OUVERT && $sortie->getDateLimiteInscription() >= $currentDate) {
-                $filteredSorties[] = $sortie; // Ajouter à la liste filtrée si la sortie est ouverte
-            } elseif ($filters['passer'] && $sortie->getEtat()->getLibelle() === Etat::PASSER) {
-                $filteredSorties[] = $sortie; // Ajouter les sorties passées
-            }
-        }
-
         return $this->render('sortie/sorties.html.twig', [
-            'sorties' => $filteredSorties,
+            'sorties' => $sorties,
             'campus' => $campus,
             'filters' => $filters,
         ]);
     }
 
-
     #[Route('/creer', name: 'creer', methods: ['GET', 'POST'])]
-    public function creer(Request $request, EntityManagerInterface $entityManager, VilleRepository $villeRepository,CampusRepository $campusRepository): Response
+    public function creer(Request $request, EntityManagerInterface $entityManager, EtatRepository $etatRepository, CampusRepository $campusRepository, LieuRepository $lieuRepository): Response
     {
         $user = $this->getUser();
-        $campus = $user ? $user?->getCampus() : null;
-
-        if (!$campus)
-        {
-            $this->addFlash('error', 'Vous n\'êtes associé à aucun campus.');
-            return $this->redirectToRoute('app_sorties');
-        }
 
         $sortie = new Sortie();
+        $sortie->setCampus($user->getCampus());
+        $sortie->setOrganisateur($user);
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $sortie->setOrganisateur($user);
-            $sortie->setCampus($campus); // Associer le campus à la sortie
+
+
+            if($form->get('Enregistrer')->isClicked()) {
+            $etat = $etatRepository->findOneBy(['libelle' => Etat::CREER]); // État "Créée"
+            }
+            else{
+                $etat = $etatRepository->findOneBy(['libelle' => Etat::OUVERT]); // État "Créée"
+            }
+
+            $sortie->setEtat($etat);  // Associer l'état à la sortie
+
+            // Persister la sortie
             $entityManager->persist($sortie);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Sortie créée avec succès');
+            $message=$form->get('Enregistrer')->isClicked() ? 'Enregistrée':'Publiée';
+            $this->addFlash('success', 'Sortie ' . $message . ' avec succès');
+
+            // Rediriger vers la liste des sorties après un succès
             return $this->redirectToRoute('app_sorties');
         }
 
         return $this->render('sortie/creer.html.twig', [
-            'form' => $form->createView(),
-            'campus' => $campus, // Le campus de l'utilisateur connecté
-            'allCampus' => $campusRepository->findAll(), // Tous les campus pour usage éventuel
+            'form' => $form
         ]);
     }
 
@@ -186,42 +163,24 @@ class SortieController extends AbstractController
     }
     //Julie
     // AJOUT DE ROUTES POUR LES REQUÊTES AJAX
-    #[Route('/api/villes', name: 'api_villes', methods: ['GET'])]
-    public function getVilles(VilleRepository $villeRepository): JsonResponse
-    {
-        $villes = $villeRepository->findAll();
-        $data = [];
 
-        foreach ($villes as $ville) {
-            $data[] = [
-                'id' => $ville->getId(),
-                'nom' => $ville->getNom(),
-                'codePostal' => $ville->getCodePostal()
-            ];
-        }
-
-        return new JsonResponse($data);
-    }
-
-
+    // Route pour récupérer les lieux par ville
     #[Route('/api/lieu/{villeId}', name: 'api_lieux_par_ville', methods: ['GET'])]
     public function getLieuxParVille(LieuRepository $lieuRepository, int $villeId): JsonResponse
     {
         $lieux = $lieuRepository->findBy(['ville' => $villeId]);
-        $data = [];
 
+        $data = [];
         foreach ($lieux as $lieu) {
             $data[] = [
                 'id' => $lieu->getId(),
                 'nom' => $lieu->getNom(),
-                'rue' => $lieu->getRue(),
-                'latitude' => $lieu->getLatitude(),
-                'longitude' => $lieu->getLongitude(),
             ];
         }
 
         return new JsonResponse($data);
     }
+
 //    détail d'un lieu spécfique
     #[Route('/api/lieu/{id}', name: 'api_lieu_details', methods: ['GET'])]
     public function getLieuDetails(LieuRepository $lieuRepository, int $id): JsonResponse

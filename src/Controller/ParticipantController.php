@@ -7,6 +7,7 @@ use App\Form\ModifProfilForm;
 use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -18,17 +19,30 @@ class ParticipantController extends AbstractController
     private $entityManager;
     private ParticipantRepository $participantRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, ParticipantRepository $participantRepository)
+    private $security;
+
+    public function __construct(EntityManagerInterface $entityManager, Security $security,ParticipantRepository $participantRepository)
     {
         $this->entityManager = $entityManager;
         $this->participantRepository = $participantRepository;
+        $this->security = $security;
     }
 
     #[Route('/participant/profil', name: 'app_profil')]
     public function profil(): Response
     {
+        // Récupérer l'utilisateur connecté (Participant)
+        $participant = $this->security->getUser();
+
+        // Vérifier si l'utilisateur est bien connecté
+        if (!$participant) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
+        }
+
+        // Rendre la vue et passer les informations de l'utilisateur connect
         return $this->render('profil/affichage_profil.html.twig', [
             'controller_name' => 'ParticipantController',
+            'participant' => $participant,
         ]);
     }
 /*

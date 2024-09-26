@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\Campus;
 use App\Form\CampusType;
+use App\Repository\CampusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,5 +64,17 @@ return $this->render('campus/edit.html.twig', [
         $entityManager->flush();
 
         return $this->redirectToRoute('app_campus'); // Assurez-vous que c'est le bon nom de route
+    }
+    #[Route('/campus/search', name: 'campus_search')]
+    public function search(Request $request, CampusRepository $campusRepository): Response
+    {
+        $searchTerm = $request->query->get('search');
+
+        // Rechercher les campus par nom
+        $campus = $campusRepository->findBySearchTerm($searchTerm);
+
+        return $this->render('admin/campus.html.twig', [
+            'campus' => $campus,
+        ]);
     }
 }

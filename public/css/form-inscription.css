@@ -1,0 +1,73 @@
+.logo{
+ text-align: center;
+}
+
+/* Style pour le formulaire d'inscription */
+.form-container {
+    background-color: #fff;
+    max-width: 600px;  /* Largeur ajustée pour un meilleur confort */
+    margin: 5% auto;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+/* Gestion des labels et champs avec flex */
+.form-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+/* Label */
+.form-group label {
+    min-width: 180px; /* Largeur minimale ajustée pour aligner tous les labels */
+    margin-right: 20px;
+    text-align: left;  /* Alignement des labels à gauche */
+    font-weight: bold;
+}
+
+/* Champs de saisie */
+.form-container input[type="text"],
+.form-container input[type="password"],
+.form-container input[type="email"],
+.form-container select {
+    flex-grow: 1; /* Les champs vont s'étendre pour occuper l'espace disponible */
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* Style pour les cases à cocher */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Bouton de soumission */
+.form-container button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    text-align: center;
+}
+
+.form-container button:hover {
+    background-color: #0056b3;
+}
+
+

@@ -1,6 +1,9 @@
 {# templates/profil/modification_profil.html.twig #}
 
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+{% endblock %}
 
 {% block title %}Modifier le profil{% endblock %}
 
@@ -17,6 +20,8 @@
     {{ form_row(modifForm.telephone) }}
     {{ form_row(modifForm.mail) }}
     {{ form_row(modifForm.campus) }} {# Afficher le champ campus au-dessus du bouton #}
+    <div>Dimension de l'image  : 300px/300px</div>
+    <div>Format : PNG, JPEG, WEBP</div>
     {{ form_row(modifForm.imageFile) }}
     {# Affichage des champs de mot de passe (le champ RepeatedType génère deux champs automatiquement) #}
     {{ form_errors(modifForm.plainPassword) }} {# Afficher les erreurs du champ de mot de passe #}

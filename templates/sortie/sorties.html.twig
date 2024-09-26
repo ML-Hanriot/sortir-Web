@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/filters.css') }}">
+{% endblock %}
+
 {% block body %}
+
+    <div class="filter-container">
     <div class="positionright">
         Date du jour : {{ "now"|date("d/m/Y") }} <br>
         {% if app.user %}
@@ -13,38 +19,54 @@
             Participant : Non connecté
         {% endif %}
     </div>
-
-    <div class="filter-container">
         <h2>Filtrer les sorties</h2>
         <form method="get">
-            <div>
-                <label for="campus">Campus :</label>
-                <select name="campus" id="campus">
-                    <option value="">Tous les campus</option>
-                    {% for c in campus %}
-                        <option value="{{ c.id }}" {% if filters.campus == c.id %}selected{% endif %}>{{ c.nom }}</option>
-                    {% endfor %}
-                </select>
+            <div class="flex-container">
+                <!-- Première colonne : Filtrer, Campus, Nom, Date -->
+                <div class="filter-column">
+                    <div>
+                        <label for="campus">Campus :</label>
+                        <select name="campus" id="campus">
+                            <option value="">Tous les campus</option>
+                            {% for c in campus %}
+                                <option value="{{ c.id }}" {% if filters.campus == c.id %}selected{% endif %}>{{ c.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="nom">Le nom de la sortie contient :</label>
+                        <input type="text" name="nom" id="nom" value="{{ filters.nom }}">
+                    </div>
+                    <div>
+                        <label for="date_debut">Entre :</label>
+                        <input type="date" name="date_debut" id="date_debut" value="{{ filters.date_debut }}">
+                        <label for="date_fin">et</label>
+                        <input type="date" name="date_fin" id="date_fin" value="{{ filters.date_fin }}">
+                    </div>
+                </div>
+
+                <!-- Deuxième colonne : Checkboxes -->
+                <div class="checkbox-column">
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="organisateur" id="organisateur" {% if filters.organisateur %}checked{% endif %}>
+                        <label for="organisateur">Sorties dont je suis l'organisateur/trice</label><br>
+
+                        <input type="checkbox" name="inscrit" id="inscrit" {% if filters.inscrit %}checked{% endif %}>
+                        <label for="inscrit">Sorties auxquelles je suis inscrit/e</label><br>
+
+                        <input type="checkbox" name="pasinscrit" id="pasinscrit" {% if filters.pasinscrit %}checked{% endif %}>
+                        <label for="pasinscrit">Sorties auxquelles je ne suis pas inscrit/e</label><br>
+
+                        <input type="checkbox" name="passer" id="passer" {% if filters.passer %}checked{% endif %}>
+                        <label for="passer">Sorties passées</label><br>
+                    </div>
+                </div>
+
+                <!-- Troisième colonne : Bouton Rechercher -->
+                <div class="button-column">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                </div>
             </div>
-            <div>
-                <label for="nom">Le nom de la sortie contient :</label>
-                <input type="text" name="nom" id="nom" value="{{ filters.nom }}">
-            </div>
-            <div>
-                Entre : <input type="date" name="date_debut" id="date_debut" value="{{ filters.date_debut }}">
-                et <input type="date" name="date_fin" id="date_fin" value="{{ filters.date_fin }}">
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" name="organisateur" id="organisateur" {% if filters.organisateur %}checked{% endif %}>
-                <label for="organisateur">Sorties dont je suis l'organisateur/trice</label><br>
-                <input type="checkbox" name="inscrit" id="inscrit" {% if filters.inscrit %}checked{% endif %}>
-                <label for="inscrit">Sorties auxquelles je suis inscrit/e</label><br>
-                <input type="checkbox" name="pasinscrit" id="pasinscrit" {% if filters.pasinscrit %}checked{% endif %}>
-                <label for="pasinscrit">Sorties auxquelles je ne suis pas inscrit/e</label><br>
-                <input type="checkbox" name="passer" id="passer" {% if filters.passer %}checked{% endif %}>
-                <label for="passer">Sorties passées</label><br>
-            </div>
-            <button type="submit" class="btn btn-primary">Filtrer</button>
         </form>
     </div>
 
@@ -87,10 +109,9 @@
                         {% if app.user in sortie.participants %}
                             <p>Vous êtes inscrit à cette sortie.</p>
                         {% else %}
-                              <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
+                            <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
                                 <button type="submit">S'inscrire</button>
                             </form>
-
                         {% endif %}
                     </td>
                 </tr>

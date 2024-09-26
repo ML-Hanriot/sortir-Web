@@ -16,7 +16,10 @@ class SortieRepository extends ServiceEntityRepository
     public function findByFilters(array $filters)
     {
         $qb = $this->createQueryBuilder('s')
-            ->leftJoin('s.participants', 'p'); // Utilisez leftJoin pour toutes les conditions de participant
+            ->leftJoin('s.participants', 'p') // Utilisez leftJoin pour toutes les conditions de participant
+            ->join('s.etat', 'e')
+            ->join('s.organisateur', 'o')
+            ->select('s,e,p,o');
 
         // Vérification et application des filtres
         if (isset($filters['campus']) && $filters['campus']) {

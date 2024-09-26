@@ -10,58 +10,85 @@ body {
     min-height: 100vh;  /* Pour assurer que le body prend la hauteur complète */
     justify-content: space-between;  /* Pour gérer le positionnement du footer */
 }
-header{
-    background-color: #fff;  /* Fond blanc pour le formulaire */
-}
-.logo{
-    color: #007BFF;
+
+/* Header Container */
+div {
+    display: flex;              /* Utilise Flexbox pour organiser le contenu horizontalement */
+    justify-content: space-between;  /* Sépare le logo à gauche et les liens à droite */
+    align-items: center;        /* Centre verticalement les éléments */
+    padding: 10px 20px;         /* Ajoute de l'espace autour du contenu */
 }
 
-a{
+/* Logo */
+.logo {
+    font-size: 24px;            /* Taille du texte pour le logo */
+    color: black;               /* Couleur du logo */
+    margin-right: auto;         /* Pousse le logo à gauche */
+}
+
+/* Navigation Links */
+.header-nav {
+    display: flex;              /* Utilise Flexbox pour aligner les liens horizontalement */
+    gap: 20px;                  /* Ajoute un espacement entre chaque lien */
+}
+
+/* Style des liens */
+.header-nav a {
+    color: black;               /* Couleur des liens */
+    text-decoration: none;      /* Enlève la décoration de lien (soulignement) */
+    padding: 10px 15px;         /* Ajoute de l'espace autour des liens */
+    border-radius: 5px;         /* Ajoute des coins arrondis */
+    transition: background-color 0.3s ease; /* Animation pour le hover */
+}
+
+/* Effet au survol des liens */
+.header-nav a:hover {
+    background-color: #00a5ff;  /* Change la couleur de fond au survol */
+}
+
+header {
+    background-color: #ffffff;  /* Couleur de fond du header */
+}
+
+a {
     text-decoration: none;
 }
-h1{
-    text-align: center;
-}
 
-/* Style pour le formulaire de connexion (register) */
+/* Correction pour le conteneur du formulaire */
 .register {
-    background-color: #fff;  /* Fond blanc pour le formulaire */
-    max-width: 400px;
-    margin: 10% auto;
+    background-color: #fff;
+    max-width: 500px; /* Largeur ajustée pour centrer correctement */
+    margin: 5% auto;
     padding: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  /* Légère ombre pour effet de profondeur */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    text-align: center;
+    display: flex;
+    flex-direction: column; /* Aligne les champs en colonne */
+    gap: 15px;
+    text-align: left; /* Aligne les textes à gauche */
 }
-
 /* Titres */
 .register h1 {
     font-size: 24px;
     margin-bottom: 20px;
     color: #000;  /* Texte noir */
-}
-
-/* Labels */
-.register label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    color: #333;  /* Couleur sobre pour les labels */
-    text-align: left;
+    text-align: center;
 }
 
 /* Champs de saisie */
 .register input[type="text"],
-.register input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
+.register input[type="password"],
+.register input[type="email"],
+.register select {
+    width: 100%; /* Champs en pleine largeur */
+    padding: 12px;
+    margin-bottom: 15px; /* Espace entre les champs */
     border: 1px solid #ddd;
     border-radius: 5px;
     box-sizing: border-box;
     font-size: 16px;
 }
+
 
 /* Bouton de soumission */
 .register button.btn {
@@ -71,24 +98,22 @@ h1{
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    width: 100%;
     font-size: 16px;
+    width: 100%; /* Le bouton prend toute la largeur */
 }
 
 .register button.btn:hover {
     background-color: #0056b3;  /* Bleu plus foncé au survol */
 }
-
-/* Checkbox container */
+/* Conteneur pour les cases à cocher */
 .checkbox-container {
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    margin-bottom: 20px;
+    flex-direction: column; /* Met les cases à cocher en colonne */
+    gap: 10px;
 }
 
 /* Style checkbox */
-.checkbox-container input[type="checkbox"] {
+.register input[type="checkbox"] {
     margin-right: 10px;
 }
 
@@ -99,16 +124,6 @@ h1{
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
-}
-
-/* Style des liens */
-.register a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-.register a:hover {
-    text-decoration: underline;
 }
 
 /* Footer */
@@ -128,69 +143,69 @@ footer {
         margin: 20px;
     }
 }
-/* Style pour le filtre */
-.filter-container {
+
+/* --- AJOUT POUR LA PAGE DE PROFIL --- */
+
+/* Conteneur pour le profil */
+/*
+.profile-container {
     background-color: #fff;
-    padding: 20px;
-    margin: 20px auto;
-    width: 80%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 600px;
+    margin: 50px auto;
+    text-align: center;  /* Centrer le contenu */
+/*}
+/*
+/* Titre du profil */
+h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+    text-transform: uppercase;  /* Ajout de capitalisation pour le titre */
 }
 
-/* Style pour le tableau */
-.table-container {
-    margin: 20px auto;
-    width: 80%;
-}
-
-.styled-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.styled-table thead tr {
-    background-color: #007bff;
-    color: white;
+/* Informations utilisateur */
+.profile-info {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #555;
     text-align: left;
+    margin-bottom: 30px;
 }
 
-.styled-table th, .styled-table td {
-    padding: 12px 15px;
+.profile-info div {
+    margin-bottom: 15px;
+}
+
+/* Bouton de modification */
+.btn {
+    display: inline-block;
     text-align: center;
-}
-
-.styled-table tbody tr {
-    border-bottom: 1px solid #dddddd;
-}
-
-.styled-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
-}
-
-.styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid #007bff;
-}
-
-/* Style pour le bouton créer */
-.create-button {
-    margin: 20px auto;
-    text-align: center;
-}
-
-.create-button button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
+    background-color: #007BFF;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
     border-radius: 5px;
-    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    font-size: 16px;
 }
 
-.create-button button:hover {
+.btn:hover {
     background-color: #0056b3;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+    margin-top: auto;  /* Garde le footer en bas */
+}
+#lieu_hidden {
+    display: none; /* Bien que ce soit redondant avec type="hidden" */
 }

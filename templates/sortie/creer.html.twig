@@ -1,60 +1,30 @@
-{#Julie#}
-{%  extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Créer une sortie{% endblock %}
-{#<link rel="stylesheet" href="{{ asset('styles/creer_modifier_sortie.css') }}">#}
 
 {% block body %}
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const villeSelect = document.getElementById('ville');
-            const lieuSelect = document.getElementById('lieu');
-            const codePostalInput = document.getElementById('code_postal');
-            const rueInput = document.getElementById('rue');
-            const latitudeInput = document.getElementById('latitude');
-            const longitudeInput = document.getElementById('longitude');
-            let lieuxData = {};
-            rueInput.value = "";
-            latitudeInput.value = "";
-            longitudeInput.value = "";
+            const villeSelect = document.getElementById('sortie_ville'); // Sélecteur pour la ville
+            const lieuSelect = document.getElementById('sortie_lieu'); // Sélecteur pour le lieu
 
-            // Charger les villes au chargement de la page
-            fetch('/projetsymfony/public/sorties/api/villes')
-                .then(response => response.json())
-                .then(villes => {
-                    villes.forEach(ville => {
-                        const option = document.createElement('option');
-                        option.value = ville.id;
-                        option.textContent = `${ville.nom} (${ville.codePostal})`;
-                        villeSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Erreur lors du chargement des villes:', error));
-
-            // Changer les lieux quand une ville est sélectionnée
+            // Charger les lieux en fonction de la ville sélectionnée
             villeSelect.addEventListener('change', function () {
-                const villeId = this.value;
-                lieuSelect.innerHTML = '<option value="">Sélectionnez un lieu</option>'; // Reset des lieux
-                codePostalInput.value = ""; // Réinitialise le code postal
+                const villeId = this.value; // Récupérer l'ID de la ville sélectionnée
+
+                // Réinitialiser le sélecteur de lieux
+                lieuSelect.innerHTML = '<option value="">Sélectionnez un lieu</option>'; // Réinitialiser
 
                 if (villeId) {
-                    // Mise à jour du code postal en fonction de la ville
-                    const selectedOption = villeSelect.options[villeSelect.selectedIndex];
-                    if (selectedOption) {
-                        const villeText = selectedOption.textContent;
-                        const codePostal = villeText.match(/\(([^)]+)\)/); // Extrait le code postal du texte
-                        if (codePostal) {
-                            codePostalInput.value = codePostal[1];
-                        }
-                    }
+                    // Charger les lieux associés à la ville
+                    const url = `{{ path('app_api_lieux_par_ville', {'villeId': '__VILLE_ID__'}) }}`.replace('__VILLE_ID__', villeId);
 
-                    // Requête pour obtenir les lieux en fonction de la ville sélectionnée
-                    fetch(`/projetsymfony/public/sorties/api/lieu/${villeId}`)
+                    fetch(url)
                         .then(response => response.json())
                         .then(lieux => {
-                            lieuxData = {}; // Reset le tableau
+
                             lieux.forEach(lieu => {
-                                lieuxData[lieu.id] = lieu; // Stocke le lieu par son ID
                                 const option = document.createElement('option');
                                 option.value = lieu.id;
                                 option.textContent = lieu.nom;
@@ -65,99 +35,35 @@
                 }
             });
 
-            // Changer les informations du lieu quand un lieu est sélectionné
+            // Met à jour le champ caché pour Symfony lorsque le lieu est sélectionné
             lieuSelect.addEventListener('change', function () {
-                const lieuId = this.value; // Récupère l'ID du lieu sélectionné
-                rueInput.value = "";
-                latitudeInput.value = "";
-                longitudeInput.value = "";
+                const selectedLieuId = this.value; // Récupérer l'ID du lieu sélectionné
+                const url = `{{ path('app_api_lieu_details', {'id': '0'}) }}`.replace('/0', '/'+ lieuSelect.value);
 
-                if (lieuId && lieuxData[lieuId]) { // Vérifie si le lieu est dans lieuxData
-                    const lieu = lieuxData[lieuId];
-                    console.log("Lieu sélectionné:", lieu);
+                fetch(url)
 
-                    // Met à jour les champs avec les données du lieu
-                    rueInput.value = lieu.rue;
-                    latitudeInput.value = lieu.latitude;
-                    longitudeInput.value = lieu.longitude;
-                } else {
-                    console.error("Lieu non trouvé dans lieuxData.");
-                }
             });
+
         });
     </script>
 
     <h1>Créer une sortie</h1>
 
-    <form action="{{ path('app_creer') }}" method="POST">
+    {# Formulaire de création de sortie #}
+        {{ form_start(form) }}
 
-        <div class="left-column">
-            <label for="nom_sortie">Nom de la sortie : </label>
-            <input type="text" id="nom_sortie" name="nom_sortie" required>
-
-            <label for="date_sortie">Date et heure de la sortie :</label>
-            <input type="datetime-local" id="date_sortie" name="date_sortie" required>
-
-            <label for="date_limite">Date limite d'inscription :</label>
-            <input type="date" id="date_limite" name="date_limite" required>
-
-            <label for="nombre_places">Nombre de places :</label>
-            <input type="number" id="nombre_places" name="nombre_places" required>
-
-            <label for="duree">Durée :</label>
-            <input type="number" id="duree" name="duree" value="90" required>
-            <span>minutes</span>
-
-            <label for="description">Description et infos :</label>
-            <textarea id="description" name="description" rows="4" required></textarea>
-
-            {#  Pour afficher uniquement le campus de l'utilisateur#}
-            <label for="campus">Campus :</label>
-            {% if campus %}
-                <input type="text" id="campus" name="campus" value="{{ campus.nom }}" readonly>
-            {% else %}
-                <select name="campus" id="campus">
-                    <option value="">Sélectionnez un campus</option>
-                    {% for campus in allCampus %}
-                        <option value="{{ campus.id }}">{{ campus.nom }}</option>
-                    {% endfor %}
-                </select>
-            {% endif %}
-
+        {# Champs du formulaire #}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.dateHeureDebut) }}
+        {{ form_row(form.dateLimiteInscription) }}
+        {{ form_row(form.nbInscriptionsMax) }}
+        {{ form_row(form.duree) }}
+        {{ form_row(form.infosSortie) }}
+        {{ form_row(form.ville) }}
+        <div class="form-group">
+            <label for="sortie_lieu">Lieu</label>
+            {{ form_row(form.lieu, { 'attr': {'id': 'sortie_lieu'} }) }} {# Génère le champ pour le lieu #}
         </div>
-
-        <div class="right-column">
-            <label for="ville">Ville :</label>
-            <select id="ville" name="ville" required>
-                <option value="">Sélectionnez une ville</option>
-            </select>
-
-            <label for="lieu">Lieu :</label>
-            <select id="lieu" name="lieu" required>
-                <option value="">Sélectionnez un lieu</option>
-            </select>
-
-            <button type="button" id="add_lieu">+</button>
-
-            <label for="rue">Rue :</label>
-            <input type="text" id="rue" name="rue" required>
-
-            <label for="code_postal">Code postal :</label>
-            <input type="text" id="code_postal" name="code_postal" required>
-
-            <label for="latitude">Latitude :</label>
-            <input type="text" id="latitude" name="latitude">
-
-            <label for="longitude">Longitude :</label>
-            <input type="text" id="longitude" name="longitude">
-        </div>
-
-        <div class="actions">
-            <button type="submit" name="action" value="enregistrer">Enregistrer</button>
-            <button type="submit" name="action" value="publier">Publier la sortie</button>
-            <button type="submit" name="action" value="annuler">Annuler</button>
-
-        </div>
-    </form>
-
+    <a href="{{ path('app_sorties') }}">Annuler</a>
+        {{ form_end(form) }}
 {% endblock %}

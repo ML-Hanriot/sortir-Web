@@ -2,48 +2,116 @@
 
 {% block title %}Gestion des Campus{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/campus.css') }}">
+{% endblock %}
+
 {% block body %}
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Gestion des Campus</h1>
 
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead class="thead-light">
+    <h1 class="explodable">Gestion des Campus</h1>
+
+    <!-- Formulaire de recherche -->
+    <h3>Filtrer les sites</h3>
+    <form method="get" action="{{ path('campus_search') }}" class="search-form">
+        <label for="search">Le nom contient :</label>
+        <input type="text" id="search" name="search" value="{{ app.request.get('search') }}" class="search-input">
+        <button type="submit" class="btn-search">Rechercher</button>
+    </form>
+
+    <div class="campus-table-wrapper">
+        <table class="campus-table">
+            <thead>
+            <tr>
+                <th class="campus-column">Nom du Campus</th>
+                <th class="actions-column">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for c in campus %}
                 <tr>
-                    <th>Nom du Campus</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for c in campus %}
-                    <tr>
-                        <td>{{ c.nom }}</td>
-                        <td>
-                            <!-- Lien pour ouvrir le formulaire de modification -->
-                            <button onclick="document.getElementById('edit-form-{{ c.id }}').style.display='block'" class="btn btn-primary" style="margin-right: 5px;">Modifier</button>
-
-                            <!-- Formulaire pour la suppression -->
-                            <form action="{{ path('campus_delete', { id: c.id }) }}" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                    <td>{{ c.nom }}</td>
+                    <td class="actions-column">
+                        <div class="action-buttons"> <!-- Alignement horizontal -->
+                            <button onclick="document.getElementById('edit-form-{{ c.id }}').style.display='block'" class="btn-modify">Modifier</button>
+                            <form action="{{ path('campus_delete', { id: c.id }) }}" method="post" class="delete-form">
+                                <button type="submit" class="btn-delete">Supprimer</button>
                             </form>
-
-                            <!-- Formulaire pour la modification -->
-                            <div id="edit-form-{{ c.id }}" style="display:none; margin-top: 10px;">
-                                <form action="{{ path('campus_edit', { id: c.id }) }}" method="post">
-                                    <input type="text" name="nom" value="{{ c.nom }}" class="form-control" required>
-                                    <button type="submit" class="btn btn-success mt-2">Modifier</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-                <tr>
-                    <td colspan="2" class="text-center">
-                        <a href="{{ path('campus_new') }}" class="btn btn-success">Ajouter un nouveau campus</a>
+                        </div>
+                        <div id="edit-form-{{ c.id }}" class="edit-form" style="display:none;">
+                            <form action="{{ path('campus_edit', { id: c.id }) }}" method="post">
+                                <input type="text" name="nom" value="{{ c.nom }}" class="input-modify">
+                                <button type="submit" class="btn-modify-submit">Modifier</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
-                </tbody>
-            </table>
-        </div>
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td>
+                    <a href="{{ path('campus_new') }}" class="btn-add">Ajouter un nouveau campus</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 {% endblock %}
+
+{#
+{% block body %}
+    <h1 class="explodable">Gestion des Campus</h1>
+
+
+    <h3>Filtrer les sites</h3>
+    <form method="get" action="{{ path('campus_search') }}" class="search-form">
+        <label for="search">Le nom contient :</label>
+        <input type="text" id="search" name="search" value="{{ app.request.get('search') }}" class="search-input">
+        <button type="submit" class="btn-search">Rechercher</button>
+    </form>
+
+
+        <div class="table-container">
+            <div class="table-responsive text-center">
+                <table class="styled-table">
+                    <thead>
+                    <tr>
+                        <th>Nom du Campus</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for c in campus %}
+                        <tr>
+                            <td>{{ c.nom }}</td>
+                            <td>
+                                <button
+                                        onclick="document.getElementById('edit-form-{{ c.id }}').style.display='block'"
+                                        class="custom-button edit-button"
+                                        style="margin-right: 5px;">
+                                    Modifier
+                                </button>
+
+                                <form action="{{ path('campus_delete', { id: c.id }) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="custom-button delete-button">Supprimer</button>
+                                </form>
+
+                                <div id="edit-form-{{ c.id }}" style="display:none; margin-top: 10px;">
+                                    <form action="{{ path('campus_edit', { id: c.id }) }}" method="post">
+                                        <input type="text" name="nom" value="{{ c.nom }}" class="form-control" required>
+                                        <button type="submit" class="custom-button edit-button">Modifier</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2" class="text-center">
+                            <a href="{{ path('campus_new') }}" class="custom-button add-button">Ajouter un nouveau campus</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}#}
