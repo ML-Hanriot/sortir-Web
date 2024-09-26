@@ -188,17 +188,6 @@ class SortieController extends AbstractController
             'sortie' => $sortie,
         ]);
     }
-    public function afficherParticipants(Sortie $sortie, ParticipantSortieRepository $participantSortieRepository): Response
-    {
-        // Récupérer les participants de la sortie
-        $participantsSortie = $participantSortieRepository->findBy(['sortie' => $sortie]);
-
-        return $this->render('sortie/participants.html.twig', [
-            'sortie' => $sortie,
-            'participantsSortie' => $participantsSortie,
-        ]);
-    }
-
     //Julie
     // AJOUT DE ROUTES POUR LES REQUÊTES AJAX
 
