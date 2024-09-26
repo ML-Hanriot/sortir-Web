@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+<!-- sortie/participants.html.twig -->
+{% extends 'base.html.twig' %}
+
+{% block title %}Participants de {{ sortie.nom }}{% endblock %}
+
+{% block body %}
+    <h1>Participants de la sortie "{{ sortie.nom }}"</h1>
+
+    <ul>
+        {% for participantSortie in participantsSortie %}
+            <li>
+                <a href="{{ path('app_profil', { id: participantSortie.participant.id }) }}">
+                    {{ participantSortie.participant.nom }} {{ participantSortie.participant.prenom }}
+                </a>
+            </li>
+        {% else %}
+            <li>Aucun participant pour cette sortie.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+

@@ -27,25 +27,29 @@
 
     <div>
         <h3>Liste des participants inscrits :</h3>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Pseudo</th>
-                <th>Nom</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for inscrit in inscrits %}
+        {% if app.user in inscrits %}
+            <table class="table">
+                <thead>
                 <tr>
-                    <td>{{ inscrit.pseudo }}</td>
-                    <td>{{ inscrit.prenom ~ ' ' ~ inscrit.nom }}</td>
+                    <th>Pseudo</th>
+                    <th>Nom</th>
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="2">Aucun participant inscrit</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for inscrit in inscrits %}
+                    <tr>
+                        <td>{{ inscrit.pseudo }}</td>
+                        <td>{{ inscrit.prenom ~ ' ' ~ inscrit.nom }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2">Aucun participant inscrit</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Vous n'êtes pas inscrit à cette sortie. Vous ne pouvez pas voir la liste des participants.</p>
+        {% endif %}
     </div>
 {% endblock %}
