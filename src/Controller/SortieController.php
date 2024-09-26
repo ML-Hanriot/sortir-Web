@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 #[Route('/sorties', name: 'app_')]
@@ -136,8 +137,10 @@ class SortieController extends AbstractController
         ]);
     }
 
+    // src/Controller/SortieController.php
+
     #[Route('/sortie/{id}/annuler', name: 'annuler', methods: ['GET', 'POST'])]
-    public function annuler(Request $request, SortieRepository $sortieRepository, EntityManagerInterface $entityManager, int $id): Response
+    public function annuler(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager, SessionInterface $session, int $id): Response
     {
         // Récupérer la sortie par son ID
         $sortie = $sortieRepository->find($id);
@@ -147,12 +150,36 @@ class SortieController extends AbstractController
             throw $this->createNotFoundException('La sortie n\'existe pas.');
         }
 
+        // Vérifier si l'utilisateur est l'organisateur ou un administrateur
+        if ($sortie->getOrganisateur() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas annuler cette sortie.');
+        }
+
+        // Vérifier si la sortie n'a pas encore commencé
+        $now = new \DateTime();
+        if ($sortie->getDateHeureDebut() <= $now) {
+            $this->addFlash('error', 'Vous ne pouvez pas annuler une sortie qui a déjà commencé.');
+            return $this->redirectToRoute('app_sorties');
+        }
+
         if ($request->isMethod('POST')) {
-            if ($this->isCsrfTokenValid('supprimer' . $sortie->getId(), $request->request->get('_token'))) {
-                $entityManager->remove($sortie);
+            // Récupérer le motif d'annulation depuis le formulaire
+            $motifAnnulation = $request->request->get('motif_annulation');
+            // Stocker le motif dans la session
+            $session->set('motif_annulation_' . $sortie->getId(), $motifAnnulation);
+            // Vérifier le token CSRF
+            if ($this->isCsrfTokenValid('annuler' . $sortie->getId(), $request->request->get('_token'))) {
+                // Récupérer l'état "Annulée" depuis la base de données
+                $etatAnnulee = $etatRepository->findOneBy(['libelle' => 'Annulée']);
+
+                // Mettre à jour l'état de la sortie
+                $sortie->setEtat($etatAnnulee);
+
+                // Sauvegarder les modifications
+                $entityManager->persist($sortie);
                 $entityManager->flush();
 
-                $this->addFlash('success', 'Sortie supprimée avec succès');
+                $this->addFlash('success', 'Sortie annulée avec succès.');
                 return $this->redirectToRoute('app_sorties');
             }
         }

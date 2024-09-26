@@ -1,4 +1,3 @@
-{# annulation.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}
@@ -9,15 +8,25 @@
     <h2 class="container">Annuler une sortie</h2>
 
     <div class="container">
-        Nom de la sortie : {{ sortie.nom }}<br>
-        Date de la sortie : {{ sortie.dateHeureDebut|date('d/m/Y H:i') }}<br> {# Formate la date #}
-        Campus : {{ sortie.campus.nom }}<br> {# Affiche le nom du campus #}
-        Lieu : {{ sortie.lieu.nom }}<br> {# Assurez-vous que Lieu a une propriété nom #}
-        Motif : <textarea name="motif" id="motif" cols="30" rows="10"></textarea>
+        <p>Nom de la sortie : {{ sortie.nom }}</p>
+        <p>Date de la sortie : {{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</p>
+        <p>Campus : {{ sortie.campus.nom }}</p>
+        <p>Lieu : {{ sortie.lieu.nom }}</p>
 
-        <div class="d-flex">
-            <button type="submit">Enregistrer</button>
-            <button type="button" onclick="window.history.back();">Annuler</button> {# Utilise l'historique pour revenir en arrière #}
-        </div>
+        {# Formulaire d'annulation #}
+        <form method="post" action="{{ path('app_annuler', {'id': sortie.id}) }}">
+            {# Sécurité CSRF #}
+            <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ sortie.id) }}">
+
+            <div class="form-group">
+                <label for="motif">Motif d'annulation :</label>
+                <textarea name="motif_annulation" id="motif_annulation" cols="30" rows="10" class="form-control" required></textarea>
+            </div>
+
+            <div class="d-flex mt-3">
+                <button type="submit" class="btn btn-danger">Enregistrer</button>
+                <button type="button" class="btn btn-secondary ml-2" onclick="window.history.back();">Annuler</button>
+            </div>
+        </form>
     </div>
 {% endblock %}
