@@ -101,17 +101,6 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{{ path('app_voir', {'id': sortie.id}) }}">Afficher Sortie</a>
-                        {% if sortie.organisateur == app.user or app.user.isAdmin %}
-                            <a href="{{ path('app_annuler', {'id': sortie.id}) }}">Annuler</a>
-                        {% endif %}
-
-                        {% if app.user in sortie.participants %}
-                            <p>Vous êtes inscrit à cette sortie.</p>
-                        {% else %}
-                            <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
-                                <button type="submit">S'inscrire</button>
-                            </form>
                         {% if sortie.etat.libelle == 'Annulée' %}
                             <p>Motif d'annulation : {{ app.session.get('motif_annulation_' ~ sortie.id) ?? 'Aucun motif fourni' }}</p>
                         {% else %}
