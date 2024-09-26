@@ -119,6 +119,7 @@
                             {% if sortie.organisateur == app.user or app.user.isAdmin %}
                                 <a href="{{ path('app_annuler', {'id': sortie.id}) }}">Annuler</a>
                             {% endif %}
+
                             {% if app.user in sortie.participants %}
                                 <p>Vous êtes inscrit à cette sortie.</p>
                             {% else %}
