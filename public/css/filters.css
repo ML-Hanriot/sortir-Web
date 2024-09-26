@@ -1,82 +1,62 @@
-/* Conteneur principal pour les filtres */
-.filter-container {
-    background-color: #fff;
+/* Style global pour centrer et styliser les sections */
+.backGround {
+    background-color: #ececec;
+    max-width: 80%;
+    margin: auto;
+    margin-top: 2%;
+    display: flex;
     padding: 20px;
-    border-radius: 10px;
-    max-width: 1000px;
-    margin: 20px auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Style des titres */
-.filter-container h2 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: left;
-
+.backGround2 {
+    background-color: #ececec;
+    max-width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between; /* Pour séparer les colonnes */
+    align-items: center; /* Pour aligner les éléments verticalement */
 }
 
-/* Conteneur flex pour organiser les trois colonnes */
-.flex-container {
+/* Titres et alignement des titres */
+.titre {
     display: flex;
     justify-content: space-between;
-
-    gap: 20px;
-    align-items: flex-start;  /* Aligne les éléments en haut */
-}
-
-/* Colonne des filtres à gauche */
-.filter-column {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* Style pour les labels et champs des filtres */
-.filter-column label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.filter-column input[type="text"],
-.filter-column input[type="date"],
-.filter-column select {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
 }
 
-/* Colonne pour les checkboxes au centre */
-.checkbox-column {
+/* Style pour les colonnes de filtres */
+.filter-column {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    align-items: flex-start; /* Aligne les cases à gauche */
+    align-items: flex-start;
+    width: 500px;
+    justify-content: space-around;
 }
 
-/* Style des labels des cases à cocher */
-.checkbox-column label {
-    font-weight: normal;
+/* Colonne des checkboxes (centrée) */
+.checkbox-column {
+    flex: 3;
+    display: flex;
+    width: auto;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start; /* Colle les éléments à gauche dans la colonne */
 }
 
-/* Colonne pour le bouton Filtrer */
+/* Colonne du bouton (à droite) */
 .button-column {
     flex: 1;
     display: flex;
-    align-items: flex-start;  /* Aligne le bouton en haut */
-    justify-content: flex-end;
+    justify-content: flex-end; /* Aligne le bouton à droite */
+    margin-left: 0px;
 }
 
 .button-column button {
     background-color: #007bff;
-    color: #fff;
-    padding: 12px 20px;
+    color: white;
+    padding: 12px 25px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -87,36 +67,56 @@
     background-color: #0056b3;
 }
 
-/* Table des sorties */
-.table-container {
-    max-width: 1000px;
-    margin: 20px auto;
-}
-
+/* Style du tableau */
 .styled-table {
-    width: 100%;
+    width: 100%; /* Tableau en pleine largeur */
     border-collapse: collapse;
-    border-radius: 5px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.styled-table th, .styled-table td {
-    padding: 12px 15px;
+    margin: 25px 0;
+    font-size: 18px;
+    font-weight: bold;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    background-color: #eaeaea; /* Arrière-plan */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); /* Ombre légère */
+    border-radius: 10px; /* Bordures arrondies */
+    overflow: hidden; /* Pour appliquer l'arrondissement aux bordures */
 }
 
-.styled-table th {
-    background-color: #007bff;
-    color: white;
+.styled-table thead tr {
+    background-color: #007bff; /* Couleur du header */
+    color: black;
+    text-align: left;
     font-weight: bold;
 }
 
-.styled-table tbody tr:hover {
-    background-color: #f1f1f1;
+.styled-table th, .styled-table td {
+    padding: 12px 15px; /* Espacement dans les cellules */
+    border: 2px solid #000000; /* Bordures légères */
 }
 
-/* Bouton Créer une sortie */
+.styled-table tbody tr {
+    border-bottom: 1px solid #000000;
+}
+
+/* Alternance de couleur des lignes */
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:hover {
+    background-color: rgba(0, 209, 255, 0.35);
+}
+
+/* Dernière ligne du tableau */
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #007bff; /* Bordure plus épaisse */
+}
+
+.styled-table td {
+    border: solid 1px #252525;
+    text-align: center;
+}
+
+/* Style pour le bouton centré en bas */
 .create-button {
     display: flex;
     justify-content: center;
@@ -125,7 +125,7 @@
 
 .create-button button {
     background-color: #007bff;
-    color: #fff;
+    color: white;
     padding: 12px 25px;
     border: none;
     border-radius: 5px;
@@ -136,8 +136,8 @@
 .create-button button:hover {
     background-color: #0056b3;
 }
-.flex-container-int{
-    display: flex;
-    flex-wrap: wrap;
 
+table {
+    border-radius: 5px;
+    border: solid #ff0000 2px;
 }

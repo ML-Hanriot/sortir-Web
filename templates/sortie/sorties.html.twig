@@ -6,23 +6,31 @@
 
 {% block body %}
 
-    <div class="filter-container">
-        <div class="positionright">
-            Date du jour : {{ "now"|date("d/m/Y") }} <br>
-            {% if app.user %}
-                {% if is_granted('ROLE_ADMIN') %}
-                    Administrateur : {{ app.user.pseudo }}
+    <!--NOUVEAU A CONSERVER POUR CSS FONCITONNEL -->
+    <div class="backGround">
+        <div class="titre">
+            <div>
+                <h3>Filtrer les sorties</h3>
+            </div>
+            <div>
+                Date du jour : {{ "now"|date("d/m/Y") }} <br>
+                {% if app.user %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        Administrateur : {{ app.user.pseudo }}
+                    {% else %}
+                        Participant : {{ app.user.pseudo }}
+                    {% endif %}
                 {% else %}
-                    Participant : {{ app.user.pseudo }}
+                    Participant : Non connecté
                 {% endif %}
-            {% else %}
-                Participant : Non connecté
-            {% endif %}
+            </div>
         </div>
-        <h2>Filtrer les sorties</h2>
+    </div>
+
+    <div class="backGround2">
         <form method="get">
-            <div class="flex-container">
-                <!-- Première colonne : Filtrer, Campus, Nom, Date -->
+            <div class="flex-left">
+                <!-- Première colonne : Filtres -->
                 <div class="filter-column">
                     <div>
                         <label for="campus">Campus :</label>
@@ -33,10 +41,11 @@
                             {% endfor %}
                         </select>
                     </div>
+
                     <div>
-                        <label for="nom">Le nom de la sortie contient :</label>
-                        <input type="text" name="nom" id="nom" value="{{ filters.nom }}">
+                        <label for="nom">Le nom de la sortie contient :</label><input type="text" name="nom" id="nom" value="{{ filters.nom }}">
                     </div>
+
                     <div>
                         <label for="date_debut">Entre :</label>
                         <input type="date" name="date_debut" id="date_debut" value="{{ filters.date_debut }}">
@@ -45,32 +54,24 @@
                     </div>
                 </div>
 
-                <!-- Deuxième colonne : Checkboxes -->
+                <!-- Colonne centrale : Checkboxes -->
                 <div class="checkbox-column">
-                    <div class="checkbox-group">
-                        <input type="checkbox" name="organisateur" id="organisateur" {% if filters.organisateur %}checked{% endif %}>
-                        <label for="organisateur">Sorties dont je suis l'organisateur/trice</label><br>
-
-                        <input type="checkbox" name="inscrit" id="inscrit" {% if filters.inscrit %}checked{% endif %}>
-                        <label for="inscrit">Sorties auxquelles je suis inscrit/e</label><br>
-
-                        <input type="checkbox" name="pasinscrit" id="pasinscrit" {% if filters.pasinscrit %}checked{% endif %}>
-                        <label for="pasinscrit">Sorties auxquelles je ne suis pas inscrit/e</label><br>
-
-                        <input type="checkbox" name="passer" id="passer" {% if filters.passer %}checked{% endif %}>
-                        <label for="passer">Sorties passées</label><br>
-                    </div>
+                    <label><input type="checkbox" name="organisateur" id="organisateur" {% if filters.organisateur %}checked{% endif %}> Sorties dont je suis l'organisateur/trice</label>
+                    <label><input type="checkbox" name="inscrit" id="inscrit" {% if filters.inscrit %}checked{% endif %}> Sorties auxquelles je suis inscrit/e</label>
+                    <label><input type="checkbox" name="pasinscrit" id="pasinscrit" {% if filters.pasinscrit %}checked{% endif %}> Sorties auxquelles je ne suis pas inscrit/e</label>
+                    <label><input type="checkbox" name="passer" id="passer" {% if filters.passer %}checked{% endif %}> Sorties passées</label>
                 </div>
 
-                <!-- Troisième colonne : Bouton Rechercher -->
+                <!-- Colonne droite : Bouton Filtrer -->
                 <div class="button-column">
                     <button type="submit" class="btn btn-primary">Filtrer</button>
                 </div>
             </div>
         </form>
     </div>
+    <!--FIN A CONSERVER POUR CSS FONCITONNEL -->
 
-    <div class="table-container">
+    <div>
         <table class="styled-table">
             <thead>
             <tr>
@@ -86,53 +87,43 @@
             </thead>
             <tbody>
             {% for sortie in sorties %}
-                {% set date_actuelle = "now"|date('Y-m-d') %}
-                {% set date_un_mois_apres_sortie = sortie.dateHeureDebut|date_modify('+1 month')|date('Y-m-d') %}
-
-                {% if date_actuelle <= date_un_mois_apres_sortie %}
-                    <tr>
-                        <td>{{ sortie.nom }}</td>
-                        <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
-                        <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
-                        <td>{{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}</td>
-                        <td>{{ sortie.etat.libelle }}</td>
-                        <td>{{ sortie.organisateur.nom }}</td>
-                        <td>
+                <tr>
+                    <td>{{ sortie.nom }}</td>
+                    <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
+                    <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
+                    <td>{{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}</td>
+                    <td>{{ sortie.etat.libelle }}</td>
+                    <td>{{ sortie.organisateur.nom }}</td>
+                    <td>
+                        {% if app.user in sortie.participants %}
+                            X
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if sortie.etat.libelle == 'Annulée' %}
+                            <p>Motif d'annulation : {{ app.session.get('motif_annulation_' ~ sortie.id) ?? 'Aucun motif fourni' }}</p>
+                        {% else %}
+                            <a href="{{ path('app_voir', {'id': sortie.id}) }}">Afficher Sortie</a>
+                            {% if sortie.organisateur == app.user or app.user.isAdmin %}
+                                <a href="{{ path('app_annuler', {'id': sortie.id}) }}">Annuler</a>
+                            {% endif %}
                             {% if app.user in sortie.participants %}
-                                X
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if sortie.etat.libelle == 'Annulée' %}
-                                <p>Motif d'annulation : {{ app.session.get('motif_annulation_' ~ sortie.id) ?? 'Aucun motif fourni' }}</p>
-                            {% else %}
-                                <a href="{{ path('app_voir', {'id': sortie.id}) }}">Afficher Sortie</a>
-
-                                {# Bouton "Annuler" si l'utilisateur est organisateur ou admin #}
-                                {% if sortie.organisateur == app.user or app.user.isAdmin %}
-                                    <a href="{{ path('app_annuler', {'id': sortie.id}) }}">Annuler</a>
+                                <p>Vous êtes inscrit à cette sortie.</p>
+                                {% if sortie.dateHeureDebut|date('Y-m-d H:i') > "now"|date('Y-m-d H:i') %}
+                                    <a href="{{ path('app_sedesister', {'id': sortie.id}) }}">Se désister</a>
                                 {% endif %}
-
-                                {# Si l'utilisateur est inscrit et la sortie n'a pas encore commencé #}
-                                {% if app.user in sortie.participants %}
-                                    <p>Vous êtes inscrit à cette sortie.</p>
-                                    {% if sortie.dateHeureDebut|date('Y-m-d H:i') > "now"|date('Y-m-d H:i') %}
-                                        <a href="{{ path('app_sedesister', {'id': sortie.id}) }}"> - Se désister</a>
-                                    {% endif %}
-                                {% else %}
-                                    {# Afficher "S'inscrire" si la date limite d'inscription n'est pas atteinte #}
-                                    {% if "now"|date('Y-m-d') < sortie.dateLimiteInscription|date('Y-m-d') %}
-                                        <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
-                                            <button type="submit">S'inscrire</button>
-                                        </form>
-                                    {% endif %}
+                            {% else %}
+                                {% if "now"|date('Y-m-d') < sortie.dateLimiteInscription|date('Y-m-d') %}
+                                    <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
+                                        <button type="submit">S'inscrire</button>
+                                    </form>
                                 {% endif %}
                             {% endif %}
-                        </td>
-                    </tr>
-                {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
             {% else %}
                 <tr>
                     <td colspan="8">Aucune sortie disponible</td>
@@ -147,4 +138,6 @@
             Créer une sortie
         </button>
     </div>
+
+
 {% endblock %}

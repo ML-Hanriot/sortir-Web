@@ -21,7 +21,7 @@ class SinscrireController extends AbstractController
         // Vérification que l'utilisateur est bien un participant
         if (!$user instanceof Participant) {
             $this->addFlash('error', 'Vous devez être un participant pour vous inscrire.');
-            return $this->redirectToRoute('app_sorties');
+           /// return $this->redirectToRoute('app_sorties');
         }
 
         // Recharger l'entité sortie pour s'assurer qu'elle est à jour
@@ -31,7 +31,7 @@ class SinscrireController extends AbstractController
         $currentDate = new \DateTime(); // Date actuelle
         if ($sortie->getEtat()->getLibelle() !== Etat::OUVERT || $sortie->getDateLimiteInscription() < $currentDate) {
             $this->addFlash('error', 'La sortie doit être ouverte et la date limite d\'inscription ne doit pas être dépassée.');
-            return $this->redirectToRoute('app_sorties');
+           // return $this->redirectToRoute('app_sorties');
         }
 
         // Vérifier si l'utilisateur est déjà inscrit à cette sortie
