@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Utilisateurs{% endblock %}
+
+{% block body %}
+    <h1>Liste des utilisateurs</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Pseudo</th>
+            <th>Email</th>
+            <th>Actif</th>
+            <th>Administrateur</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for participant in participants %}
+            <tr>
+                <td>{{ participant.pseudo }}</td>
+                <td>{{ participant.mail }}</td>
+                <td>{{ participant.actif ? 'Oui' : 'Non' }}</td>
+                <td>{{ participant.administrateur ? 'Oui' : 'Non' }}</td>
+                <td>
+                    <a href="{{ path('user_toggle_active', { id: participant.id }) }}" class="btn btn-warning">
+                        {{ participant.actif ? 'Rendre inactif' : 'Rendre actif' }}
+                    </a>
+                    <a href="{{ path('user_toggle_admin', { id: participant.id }) }}" class="btn btn-info">
+                        {{ participant.administrateur ? 'Retirer admin' : 'Passer admin' }}
+                    </a>
+                    <a href="{{ path('user_delete', { id: participant.id }) }}" class="btn btn-danger"
+                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                        Supprimer
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
