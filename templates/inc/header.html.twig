@@ -1,5 +1,5 @@
 <div>
-<h1 class="logo">Logo Sortir.com</h1>
+ <a href="{{ path('app_sorties') }}"><h1 class="logo">Logo Sortir.com</h1></a>
 
 <nav class="header-nav">
     {% if app.user %}
@@ -7,7 +7,6 @@
         <a href="{{ path('villes_index') }}" title="Villes">Villes</a>
         <a href="{{ path('app_campus') }}" title="Campus">Campus</a>
             <a href="{{ path('app_register') }}" title="AjoutUtilisateur">Ajouter Utilisateur</a>
-            <a href="{{ path('user_management') }}" title="AjoutUtilisateur">Gestion Utilisateur</a>
         {% endif %}
     <a href="{{ path('app_sorties') }}" title="About us">Accueil</a>
         <a href="{{ path('app_profil') }}" title="MonProfil">Mon profil</a>
