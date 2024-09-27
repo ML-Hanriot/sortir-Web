@@ -141,3 +141,27 @@ table {
     border-radius: 5px;
     border: solid #ff0000 2px;
 }
+/* Style des boutons dans la colonne Actions */
+.actions-button {
+    background-color: #007bff; /* Couleur bleue */
+    color: white;
+    padding: 10px 20px; /* Ajuste la taille des boutons */
+    border: none;
+    border-radius: 15px; /* Coins arrondis */
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Ajout d'une ombre */
+    transition: transform 0.2s ease; /* Animation pour un effet d'agrandissement au survol */
+}
+
+.actions-button:hover {
+    background-color: #0056b3; /* Couleur bleue plus foncée au survol */
+    transform: scale(1.1); /* Légère augmentation de taille au survol */
+}
+
+/* Style pour aligner les boutons dans la colonne */
+.actions {
+    display: flex;
+    justify-content: space-evenly; /* Répartit les boutons équitablement dans la cellule */
+    align-items: center;
+}

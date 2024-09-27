@@ -117,7 +117,7 @@
                             {% else %}
                                 {% if "now"|date('Y-m-d') < sortie.dateLimiteInscription|date('Y-m-d') %}
                                     <form action="{{ path('app_sinscrire', {'id': sortie.id}) }}" method="post">
-                                        <button type="submit">S'inscrire</button>
+                                        <button type="submit" >S'inscrire</button>
                                     </form>
                                 {% endif %}
                             {% endif %}
