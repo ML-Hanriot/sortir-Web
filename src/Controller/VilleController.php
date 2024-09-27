@@ -60,7 +60,7 @@ public function new(Request $request): Response
     $repository = $this->entityManager->getRepository(Ville::class);
     $villes = $repository->findAll();
 
-    return $this->render('admin/ville.html.twig', [
+    return $this->render('ville/addville.html.twig', [
         'form' => $form->createView(),
         'villes' => $villes, // Ajout de la variable 'villes'
     ]);

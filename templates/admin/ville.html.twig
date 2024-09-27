@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block body %}
-
     <h1>Gestion des Villes</h1>
 
     <!-- Formulaire de recherche -->
@@ -23,6 +22,7 @@
             <thead>
             <tr>
                 <th class="villes-column">Nom de la Ville</th>
+                <th class="villes-column">Code Postal</th> <!-- Nouvelle colonne pour le code postal -->
                 <th class="actions-column">Actions</th>
             </tr>
             </thead>
@@ -30,6 +30,7 @@
             {% for v in villes %}
                 <tr>
                     <td>{{ v.nom }}</td>
+                    <td>{{ v.codePostal }}</td> <!-- Affichage du code postal -->
                     <td class="actions-column">
                         <div class="action-buttons"> <!-- Alignement horizontal -->
                             <button onclick="document.getElementById('edit-form-{{ v.id }}').style.display='block'" class="btn-modify">Modifier</button>
@@ -40,6 +41,7 @@
                         <div id="edit-form-{{ v.id }}" class="edit-form" style="display:none;">
                             <form action="{{ path('villes_edit', { id: v.id }) }}" method="post">
                                 <input type="text" name="nom" value="{{ v.nom }}" class="input-modify">
+                                <input type="text" name="codePostal" value="{{ v.codePostal }}" class="input-modify"> <!-- Edition du code postal -->
                                 <button type="submit" class="btn-modify-submit">Modifier</button>
                             </form>
                         </div>
@@ -47,8 +49,7 @@
                 </tr>
             {% endfor %}
             <tr>
-                <td></td>
-                <td>
+                <td colspan="3">
                     <a href="{{ path('villes_new') }}" class="btn-add">Ajouter une nouvelle ville</a>
                 </td>
             </tr>
