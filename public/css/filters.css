@@ -38,8 +38,9 @@
 /* Colonne des checkboxes (centrée) */
 .checkbox-column {
     flex: 3;
+    padding-left: 200px;
     display: flex;
-    width: auto;
+    width: 500px;
     flex-direction: column;
     gap: 10px;
     align-items: flex-start; /* Colle les éléments à gauche dans la colonne */
