@@ -47,23 +47,64 @@
         });
     </script>
 
-    <h1>Créer une sortie</h1>
+    <div class="form-wrapper">
+        <h1 class="form-title">Créer une sortie</h1>
 
-    {# Formulaire de création de sortie #}
-        {{ form_start(form) }}
+        <div class="form-container">
+            {{ form_start(form) }}
 
-        {# Champs du formulaire #}
-        {{ form_row(form.nom) }}
-        {{ form_row(form.dateHeureDebut) }}
-        {{ form_row(form.dateLimiteInscription) }}
-        {{ form_row(form.nbInscriptionsMax) }}
-        {{ form_row(form.duree) }}
-        {{ form_row(form.infosSortie) }}
-        {{ form_row(form.ville) }}
-        <div class="form-group">
-            <label for="sortie_lieu">Lieu</label>
-            {{ form_row(form.lieu, { 'attr': {'id': 'sortie_lieu'} }) }} {# Génère le champ pour le lieu #}
+            <div class="form-group">
+                {{ form_label(form.nom) }}
+                {{ form_widget(form.nom, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.dateHeureDebut) }}
+                {{ form_widget(form.dateHeureDebut, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.dateLimiteInscription) }}
+                {{ form_widget(form.dateLimiteInscription, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.nbInscriptionsMax) }}
+                {{ form_widget(form.nbInscriptionsMax, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.duree) }}
+                {{ form_widget(form.duree, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.infosSortie) }}
+                {{ form_widget(form.infosSortie, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.ville) }}
+                {{ form_widget(form.ville, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+
+            <div class="form-group">
+                <label for="sortie_lieu">Lieu</label>
+                {{ form_widget(form.lieu, { 'attr': {'id': 'sortie_lieu', 'class': 'form-control'} }) }}
+            </div>
+
+            <div class="form-group">
+                <label for="longitude">Longitude</label>
+                <input type="text" id="longitude" class="form-control" value="2.294351" readonly>
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ path('app_sorties') }}" class="btn btn-secondary">Annuler</a>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <button type="submit" class="btn btn-success">Publier</button>
+            </div>
+
+            {{ form_end(form) }}
         </div>
-    <a href="{{ path('app_sorties') }}">Annuler</a>
-        {{ form_end(form) }}
+    </div>
 {% endblock %}

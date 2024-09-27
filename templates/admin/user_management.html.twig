@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Utilisateurs{% endblock %}
+
+{% block body %}
+    <h1>Gestion des Utilisateurs</h1>
+
+    <div class="management-options">
+        <a href="{{ path('user_registration') }}" class="btn btn-primary">Inscrire un Utilisateur</a>
+        <a href="{{ path('user_list') }}" class="btn btn-primary">Gérer les Utilisateurs</a>
+    </div>
+
+    {% if users is defined %}
+        <h2>Liste des Utilisateurs</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Pseudo</th>
+                <th>Email</th>
+                <th>Actif</th>
+                <th>Administrateur</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.pseudo }}</td>
+                    <td>{{ user.mail }}</td>
+                    <td>{{ user.actif ? 'Oui' : 'Non' }}</td>
+                    <td>{{ user.administrateur ? 'Oui' : 'Non' }}</td>
+                    <td>
+                        <a href="{{ path('user_edit', { id: user.id }) }}" class="btn btn-sm btn-warning">Modifier</a>
+                        <form action="{{ path('user_delete', { id: user.id }) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
