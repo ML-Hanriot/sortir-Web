@@ -8,7 +8,7 @@
 {% block title %}Modifier le profil{% endblock %}
 
 {% block body %}
-    profile
+<div class="profile-container">
     <h1>Modifier le profil</h1>
     {% if participant.imageName %}
         <img src="{{ asset('uploads/images/' ~ participant.imageName) }}" alt="Image de profil">
@@ -41,4 +41,5 @@
             </div>
         {% endfor %}
     {% endfor %}
+    </div>
 {% endblock %}
