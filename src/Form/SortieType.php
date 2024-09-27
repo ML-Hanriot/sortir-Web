@@ -62,8 +62,17 @@ class SortieType extends AbstractType
                 'mapped'=>false,
                 'attr' => ['readonly' => true], // Empêcher la modification manuelle
             ])
-            ->add('Enregistrer', SubmitType::class, ['label' => 'Enregistrer'])
-            ->add('Publier', SubmitType::class, ['label' => 'Publier']);
+            ->add('latitude', EntityType::class, [
+                'class'=>Lieu::class,
+                'choice_label' => 'Latitude',
+                'mapped'=>false,
+                'attr' => ['readonly' => true],
+                // Empêcher la modification manuelle
+            ])
+            ->add('Enregistrer', SubmitType::class, ['label' => 'Enregistrer',
+                'attr' => ['style' => 'display:none;'] ])
+            ->add('Publier', SubmitType::class, ['label' => 'Publier',
+                'attr' => ['style' => 'display:none;'] ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

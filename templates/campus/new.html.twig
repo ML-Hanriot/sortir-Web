@@ -3,12 +3,17 @@
 {% block title %}Ajouter un Campus{% endblock %}
 
 {% block body %}
-    <h1>Ajouter un Campus</h1>
+    <div class="form-wrapper">
+        <h1 class="form-title">Ajouter un Campus</h1>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">Ajouter</button>
-    {{ form_end(form) }}
-
-    <a href="{{ path('app_campus') }}">Retour à la liste des campus</a>
+        <div class="form-container">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button class="btn btn-primary">Ajouter</button>
+                <a href="{{ path('app_campus') }}" class="btn btn-secondary">Retour à la liste des campus</a>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}

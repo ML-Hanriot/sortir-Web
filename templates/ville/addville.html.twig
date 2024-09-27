@@ -3,15 +3,22 @@
 {% block title %}Ajouter une Ville{% endblock %}
 
 {% block body %}
-    <h1>Ajouter une ville</h1>
+    <div class="form-wrapper">
+        <h1 class="form-title">Ajouter une ville</h1>
 
-    {{ form_start(form) }}
-    <div>
-        {{ form_row(form.nom) }}
-        {{ form_row(form.codePostal) }} <!-- Champ Code Postal -->
+        <div class="form-container">
+            {{ form_start(form) }}
+            <div class="form-group">
+                {{ form_row(form.nom, {'attr': {'class': 'form-control'}}) }} <!-- Nom de la ville -->
+            </div>
+            <div class="form-group">
+                {{ form_row(form.codePostal, {'attr': {'class': 'form-control'}}) }} <!-- Code postal -->
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary">Ajouter</button>
+                <a href="{{ path('villes_index') }}" class="btn btn-secondary">Retour à la liste des villes</a>
+            </div>
+            {{ form_end(form) }}
+        </div>
     </div>
-    <button class="btn">Ajouter</button>
-    {{ form_end(form) }}
-
-    <a href="{{ path('villes_index') }}">Retour à la liste des villes</a>
 {% endblock %}
