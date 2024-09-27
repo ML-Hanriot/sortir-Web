@@ -38,9 +38,9 @@
 /* Colonne des checkboxes (centrée) */
 .checkbox-column {
     flex: 3;
-    padding-left: 200px;
+    padding-left: 100px;
     display: flex;
-    width: 500px;
+    width: 300px;
     flex-direction: column;
     gap: 10px;
     align-items: flex-start; /* Colle les éléments à gauche dans la colonne */
@@ -51,7 +51,6 @@
     flex: 1;
     display: flex;
     justify-content: flex-end; /* Aligne le bouton à droite */
-    margin-left: 0px;
 }
 
 .button-column button {
@@ -76,8 +75,8 @@
     font-size: 18px;
     font-weight: bold;
     text-align: left;
-    background-color: #eaeaea; /* Arrière-plan */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); /* Ombre légère */
+    background-color: #c6c6c6; /* Arrière-plan */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 1); /* Ombre légère */
     border-radius: 10px; /* Bordures arrondies */
     overflow: hidden; /* Pour appliquer l'arrondissement aux bordures */
 }
@@ -104,7 +103,7 @@
 }
 
 .styled-table tbody tr:hover {
-    background-color: rgba(0, 209, 255, 0.35);
+    /*background-color: rgba(0, 209, 255, 0.05);*/
 }
 
 /* Dernière ligne du tableau */
